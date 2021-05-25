@@ -1,0 +1,103 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: University Life Manager API
+  description: >-
+    This is an OpenAPI specification for the University Life Manager backend. Request/response objects can be specified
+    in components. Endpoints can be specified in paths.
+servers:
+  # Base path for endpoints
+  - url: /api/v1
+security:
+  # By default, all endpoints require a bearer token
+  - bearerAuth: []
+paths:
+  /login:
+    post:
+      summary: Exchange username and password for access token
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCredentials'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+  /deliverable:
+    post:
+      summary: Create a new deliverable for the user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deliverable'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deliverable'
+    get:
+      summary: Get all deliverables for the user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deliverable'
+components:
+  responses:
+    # Login request provided invalid username+password or secured request provided invalid access token
+    AuthorizationError:
+      description: Credentials are missing or invalid
+  # Request and response objects, see https://app.swaggerhub.com/apis/j84guo/iot-api/1.0.0 for more examples
+  schemas:
+    UserCredentials:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - 'username'
+        - 'password'
+    AccessToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+      required:
+        - 'access_token'
+    Deliverable:
+      type: object
+      properties:
+        course_id:
+          type: string
+        weight:
+          type: integer
+          minimum: 0
+          maximum: 100
+        duedate:
+          type: string
+          format: date-time
+      required:
+        - 'course_id'
+        - 'weight'
+  securitySchemes:
+    # Example configuration for bearer token authentication
+    bearerAuth:
+      type: http
+      scheme: bearer
+

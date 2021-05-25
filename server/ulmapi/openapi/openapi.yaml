@@ -1,0 +1,113 @@
+openapi: 3.0.0
+info:
+  description: This is an OpenAPI specification for the University Life Manager backend.
+    Request/response objects can be specified in components. Endpoints can be specified
+    in paths.
+  title: University Life Manager API
+  version: 1.0.0
+servers:
+- url: /api/v1
+security:
+- bearerAuth: []
+paths:
+  /deliverable:
+    get:
+      operationId: deliverable_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Deliverable'
+                type: array
+          description: OK
+      summary: Get all deliverables for the user
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+    post:
+      operationId: deliverable_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deliverable'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deliverable'
+          description: OK
+      summary: Create a new deliverable for the user
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+  /login:
+    post:
+      operationId: login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCredentials'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+          description: OK
+        "401":
+          description: Credentials are missing or invalid
+      security: []
+      summary: Exchange username and password for access token
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+components:
+  responses:
+    AuthorizationError:
+      description: Credentials are missing or invalid
+  schemas:
+    UserCredentials:
+      example:
+        password: password
+        username: username
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+      - password
+      - username
+      type: object
+    AccessToken:
+      example:
+        access_token: access_token
+      properties:
+        access_token:
+          type: string
+      required:
+      - access_token
+      type: object
+    Deliverable:
+      example:
+        course_id: course_id
+        duedate: 2000-01-23T04:56:07.000+00:00
+        weight: 8
+      properties:
+        course_id:
+          type: string
+        weight:
+          maximum: 100
+          minimum: 0
+          type: integer
+        duedate:
+          format: date-time
+          type: string
+      required:
+      - course_id
+      - weight
+      type: object
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      type: http
+      x-bearerInfoFunc: ulmapi.controllers.impl.security_controller_.info_from_bearerAuth
