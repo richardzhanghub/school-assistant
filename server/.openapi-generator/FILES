@@ -2,9 +2,6 @@
 Dockerfile
 requirements.txt
 setup.py
-test-requirements.txt
-tox.ini
-ulmapi/__init__.py
 ulmapi/controllers/impl/__init__.py
 ulmapi/controllers/impl/default_controller.py
 ulmapi/controllers/impl/security_controller_.py
@@ -16,7 +13,5 @@ ulmapi/dto/signup_info.py
 ulmapi/dto/user_credentials.py
 ulmapi/encoder.py
 ulmapi/openapi/openapi.yaml
-ulmapi/test/__init__.py
-ulmapi/test/test_default_controller.py
 ulmapi/typing_utils.py
 ulmapi/util.py

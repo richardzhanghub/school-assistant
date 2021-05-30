@@ -178,10 +178,13 @@ components:
         username: username
       properties:
         email:
+          minLength: 1
           type: string
         username:
+          minLength: 1
           type: string
         password:
+          minLength: 1
           type: string
       required:
       - email

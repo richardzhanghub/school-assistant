@@ -72,6 +72,8 @@ class SignupInfo(Model):
         """
         if email is None:
             raise ValueError("Invalid value for `email`, must not be `None`")  # noqa: E501
+        if email is not None and len(email) < 1:
+            raise ValueError("Invalid value for `email`, length must be greater than or equal to `1`")  # noqa: E501
 
         self._email = email
 
@@ -95,6 +97,8 @@ class SignupInfo(Model):
         """
         if username is None:
             raise ValueError("Invalid value for `username`, must not be `None`")  # noqa: E501
+        if username is not None and len(username) < 1:
+            raise ValueError("Invalid value for `username`, length must be greater than or equal to `1`")  # noqa: E501
 
         self._username = username
 
@@ -118,5 +122,7 @@ class SignupInfo(Model):
         """
         if password is None:
             raise ValueError("Invalid value for `password`, must not be `None`")  # noqa: E501
+        if password is not None and len(password) < 1:
+            raise ValueError("Invalid value for `password`, length must be greater than or equal to `1`")  # noqa: E501
 
         self._password = password

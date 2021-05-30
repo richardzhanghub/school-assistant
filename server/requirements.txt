@@ -1,7 +1,7 @@
-Flask==1.1.1
 connexion==2.7.0
 six==1.11.0
+Flask==1.1.1
 flask_pymongo==2.3.0
-flask_testing==0.8.1
+passlib==1.7.4
 pymongo==3.11.3
 python_dateutil==2.8.1

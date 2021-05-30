@@ -1,4 +1,12 @@
-from typing import List
+from passlib.hash import bcrypt
+
+
+def hash_password(password, rounds=8):
+    return bcrypt.using(rounds=rounds).hash(password)
+
+
+def verify_password(password, hash):
+    return bcrypt.verify(password, hash)
 
 
 def info_from_bearerAuth(token):

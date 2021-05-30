@@ -3,6 +3,9 @@ import datetime
 import flask
 
 from pymongo.errors import DuplicateKeyError
+
+from ulmapi.controllers.impl.security_controller_ import hash_password, verify_password
+
 from ulmapi import get_mongo_db
 from ulmapi.dto.access_token import AccessToken
 from ulmapi.dto.cat import Cat
@@ -113,8 +116,7 @@ def signup_post(signup_info=None):  # noqa: E501
     new_user = {
         "email": signup_info.email,
         "username": signup_info.username,
-        # TODO: Hash the password!
-        "password": signup_info.password,
+        "password": hash_password(signup_info.password),
         "joined_at": datetime.datetime.utcnow(),
         "courses": []
     }

@@ -25,5 +25,9 @@
 .gitignore
 git_push.sh
 .travis.yml
+test-requirements.txt
+tox.ini
+ulmapi/test/
 README.md
+ulmapi/__init__.py
 ulmapi/__main__.py
