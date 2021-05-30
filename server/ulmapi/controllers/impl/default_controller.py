@@ -2,43 +2,85 @@ import connexion
 import datetime
 import flask
 
+from pymongo.errors import DuplicateKeyError
+from ulmapi import get_mongo_db
 from ulmapi.dto.access_token import AccessToken
-from ulmapi.dto.deliverable import Deliverable
+from ulmapi.dto.cat import Cat
 from ulmapi.dto.user_credentials import UserCredentials
+from ulmapi.dto.signup_info import SignupInfo
 
 
-def deliverable_get(user):  # noqa: E501
-    """Get all deliverables for the user
+def cat_cat_id_get(cat_id):  # noqa: E501
+    """Get cat by id for the user
+
+     # noqa: E501
+
+    :param cat_id: Cat ID
+    :type cat_id: str
+
+    :rtype: Cat
+    """
+    if cat_id == 'bu3WDwq4qw':
+        return Cat(cat_id='bu3WDwq4qw',
+                           name='Cat1',
+                           weight=20,
+                           birth_date=datetime.datetime.utcnow())
+    return flask.Response(status=404)
+
+
+def cat_cat_id_put(cat_id, cat=None):  # noqa: E501
+    """Replace a cat for the user
+
+     # noqa: E501
+
+    :param cat_id: Cat ID
+    :type cat_id: str
+    :param cat:
+    :type cat: dict | bytes
+
+    :rtype: Cat
+    """
+    if cat_id in ('bu3WDwq4qw', 'x2aaZwq4oq'):
+        cat = Cat.from_dict(connexion.request.get_json())  # noqa: E501
+        # Update cat in db...
+        return cat
+    return flask.Response(status=404)
+
+
+def cat_get():  # noqa: E501
+    """Get all cats for the user
 
      # noqa: E501
 
 
-    :rtype: List[Deliverable]
+    :rtype: List[Cat]
     """
-    # Read from db...
     return [
-        Deliverable(course_id="ece498b",
-                    weight=20,
-                    duedate=datetime.datetime.utcnow()),
-        Deliverable(course_id="ece406",
-                    weight=75,
-                    duedate=datetime.datetime.utcnow())
+        Cat(cat_id='bu3WDwq4qw',
+            name='Cat1',
+            weight=20,
+            birth_date=datetime.datetime.utcnow()),
+        Cat(cat_id='x2aaZwq4oq',
+            name='Cat2',
+            weight=20,
+            birth_date=datetime.datetime.utcnow())
     ]
 
 
-def deliverable_post(deliverable=None):  # noqa: E501
-    """Create a new deliverable for the user
+def cat_post(cat=None):  # noqa: E501
+    """Create a new cat for the user
 
      # noqa: E501
 
-    :param deliverable:
-    :type deliverable: dict | bytes
+    :param cat:
+    :type cat: dict | bytes
 
-    :rtype: Deliverable
+    :rtype: Cat
     """
-    deliverable = Deliverable.from_dict(connexion.request.get_json())
-    # Write to db...
-    return deliverable
+    cat = Cat.from_dict(connexion.request.get_json())
+    # Write to db, generate unique id...
+    cat.cat_id = 'DZMElXdXzm'
+    return (cat, 201)
 
 
 def login_post(user_credentials=None):  # noqa: E501
@@ -55,3 +97,29 @@ def login_post(user_credentials=None):  # noqa: E501
     if (user_credentials.username, user_credentials.password) == ("admin", "admin"):
         return AccessToken(access_token="admin_bearer_token")
     return flask.Response(status=401)
+
+
+def signup_post(signup_info=None):  # noqa: E501
+    """Creates a new user (signup)
+
+     # noqa: E501
+
+    :param signup_info:
+    :type signup_info: dict | bytes
+
+    :rtype: AccessToken
+    """
+    signup_info = SignupInfo.from_dict(connexion.request.get_json())
+    new_user = {
+        "email": signup_info.email,
+        "username": signup_info.username,
+        # TODO: Hash the password!
+        "password": signup_info.password,
+        "joined_at": datetime.datetime.utcnow(),
+        "courses": []
+    }
+    try:
+        get_mongo_db().users.insert_one(new_user)
+    except DuplicateKeyError:
+        return ("Both email and username must be unique.", 400)
+    return 200

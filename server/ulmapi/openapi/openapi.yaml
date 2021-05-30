@@ -10,35 +10,93 @@ servers:
 security:
 - bearerAuth: []
 paths:
-  /deliverable:
+  /cat:
     get:
-      operationId: deliverable_get
+      operationId: cat_get
       responses:
         "200":
           content:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/Deliverable'
+                  $ref: '#/components/schemas/Cat'
                 type: array
           description: OK
-      summary: Get all deliverables for the user
+        "401":
+          description: Credentials are missing or invalid
+      summary: Get all cats for the user
       x-openapi-router-controller: ulmapi.controllers.impl.default_controller
     post:
-      operationId: deliverable_post
+      operationId: cat_post
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Deliverable'
+              $ref: '#/components/schemas/Cat'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cat'
+          description: Created
+        "401":
+          description: Credentials are missing or invalid
+      summary: Create a new cat for the user
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+  /cat/{catId}:
+    get:
+      operationId: cat_cat_id_get
+      parameters:
+      - description: Cat ID
+        explode: false
+        in: path
+        name: catId
+        required: true
+        schema:
+          type: string
+        style: simple
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deliverable'
+                $ref: '#/components/schemas/Cat'
           description: OK
-      summary: Create a new deliverable for the user
+        "401":
+          description: Credentials are missing or invalid
+        "404":
+          description: Entity could not be found
+      summary: Get cat by id for the user
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+    put:
+      operationId: cat_cat_id_put
+      parameters:
+      - description: Cat ID
+        explode: false
+        in: path
+        name: catId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cat'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cat'
+          description: OK
+        "401":
+          description: Credentials are missing or invalid
+        "404":
+          description: Entity could not be found
+      summary: Replace a cat for the user
       x-openapi-router-controller: ulmapi.controllers.impl.default_controller
   /login:
     post:
@@ -60,10 +118,36 @@ paths:
       security: []
       summary: Exchange username and password for access token
       x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+  /signup:
+    post:
+      operationId: signup_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupInfo'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+          description: OK
+        "400":
+          description: A malformed request could not be processed, e.g. a field must
+            be unique or non-empty but was not
+      security: []
+      summary: Creates a new user (signup)
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
 components:
   responses:
     AuthorizationError:
       description: Credentials are missing or invalid
+    BadRequest:
+      description: A malformed request could not be processed, e.g. a field must be
+        unique or non-empty but was not
+    NotFoundError:
+      description: Entity could not be found
   schemas:
     UserCredentials:
       example:
@@ -87,23 +171,44 @@ components:
       required:
       - access_token
       type: object
-    Deliverable:
+    SignupInfo:
       example:
-        course_id: course_id
-        duedate: 2000-01-23T04:56:07.000+00:00
+        password: password
+        email: email
+        username: username
+      properties:
+        email:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      required:
+      - email
+      - password
+      - username
+      type: object
+    Cat:
+      example:
+        birth_date: 2000-01-23T04:56:07.000+00:00
+        cat_id: cat_id
+        name: name
         weight: 8
       properties:
-        course_id:
+        cat_id:
+          type: string
+        name:
           type: string
         weight:
           maximum: 100
           minimum: 0
           type: integer
-        duedate:
+        birth_date:
           format: date-time
           type: string
       required:
-      - course_id
+      - birth_date
+      - name
       - weight
       type: object
   securitySchemes:

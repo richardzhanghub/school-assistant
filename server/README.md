@@ -47,3 +47,21 @@ docker build -t ulmapi .
 # starting up a container
 docker run -p 8080:8080 ulmapi
 ```
+
+## Development
+When you add a new endpoint or modify an existing one:
+- Make the changes in `<REPOSITORY>/openapi.yaml`
+- Run `<REPOSITORY>/tools/generate-openapi-server.sh`
+    - Request/response objects will be generated in
+      `<REPOSITORY>/server/ulmapi/dto`
+    - Controller interfaces (dummy functions) will be generated in
+      `<REPOSITORY>/server/ulmapi/controllers/api`
+- Copy any new/modified controller function from `<REPOSITORY>/server/ulmapi/controllers/api`
+  into `<REPOSITORY>/server/ulmapi/controllers/impl` and fill in the application
+  logic. See existing endpoints for examples - very little Flask knowledge is
+  required, you're just writing Python :)
+  
+  
+  
+## Setup mongoDB
+The pymongo connector is already included in requirements.txt.

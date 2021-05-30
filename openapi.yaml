@@ -12,6 +12,24 @@ security:
   # By default, all endpoints require a bearer token
   - bearerAuth: []
 paths:
+  /signup:
+    post:
+      summary: Creates a new user (signup)
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupInfo'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+        '400':
+          $ref: '#/components/responses/BadRequest'
   /login:
     post:
       summary: Exchange username and password for access token
@@ -30,23 +48,25 @@ paths:
                 $ref: '#/components/schemas/AccessToken'
         '401':
           $ref: '#/components/responses/AuthorizationError'
-  /deliverable:
+  /cat:
     post:
-      summary: Create a new deliverable for the user
+      summary: Create a new cat for the user
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Deliverable'
+              $ref: '#/components/schemas/Cat'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Deliverable'
+                $ref: '#/components/schemas/Cat'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
     get:
-      summary: Get all deliverables for the user
+      summary: Get all cats for the user
       responses:
         '200':
           description: OK
@@ -55,12 +75,63 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Deliverable'
+                  $ref: '#/components/schemas/Cat'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+  /cat/{catId}:
+    get:
+      summary: Get cat by id for the user
+      parameters:
+        - name: catId
+          in: path
+          description: Cat ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cat'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    put:
+      summary: Replace a cat for the user
+      parameters:
+        - name: catId
+          in: path
+          description: Cat ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cat'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cat'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
 components:
   responses:
-    # Login request provided invalid username+password or secured request provided invalid access token
     AuthorizationError:
       description: Credentials are missing or invalid
+    BadRequest:
+      description: A malformed request could not be processed, e.g. a field must be unique or non-empty but was not
+    NotFoundError:
+      description: Entity could not be found
   # Request and response objects, see https://app.swaggerhub.com/apis/j84guo/iot-api/1.0.0 for more examples
   schemas:
     UserCredentials:
@@ -80,21 +151,38 @@ components:
           type: string
       required:
         - 'access_token'
-    Deliverable:
+    SignupInfo:
       type: object
       properties:
-        course_id:
+        email:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - 'email'
+        - 'username'
+        - 'password'
+    Cat:
+      type: object
+      properties:
+        # Auto-generated on creation
+        cat_id:
+          type: string
+        name:
           type: string
         weight:
           type: integer
           minimum: 0
           maximum: 100
-        duedate:
+        birth_date:
           type: string
           format: date-time
       required:
-        - 'course_id'
+        - 'name'
         - 'weight'
+        - 'birth_date'
   securitySchemes:
     # Example configuration for bearer token authentication
     bearerAuth:
