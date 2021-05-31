@@ -25,6 +25,7 @@
 .gitignore
 git_push.sh
 .travis.yml
+requirements.txt
 test-requirements.txt
 tox.ini
 ulmapi/test/

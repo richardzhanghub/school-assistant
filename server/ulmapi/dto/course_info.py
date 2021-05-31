@@ -31,7 +31,7 @@ class CourseInfo(Model):
         :param desired_grade: The desired_grade of this CourseInfo.  # noqa: E501
         :type desired_grade: int
         :param deliverables: The deliverables of this CourseInfo.  # noqa: E501
-        :type deliverables: List[DeliverableInfo]
+        :type deliverables: Dict[str, DeliverableInfo]
         :param time_spent: The time_spent of this CourseInfo.  # noqa: E501
         :type time_spent: List[TimeSpentInfo]
         """
@@ -40,7 +40,7 @@ class CourseInfo(Model):
             'course_name': str,
             'expected_difficulty': int,
             'desired_grade': int,
-            'deliverables': List[DeliverableInfo],
+            'deliverables': Dict[str, DeliverableInfo],
             'time_spent': List[TimeSpentInfo]
         }
 
@@ -181,7 +181,7 @@ class CourseInfo(Model):
 
 
         :return: The deliverables of this CourseInfo.
-        :rtype: List[DeliverableInfo]
+        :rtype: Dict[str, DeliverableInfo]
         """
         return self._deliverables
 
@@ -191,7 +191,7 @@ class CourseInfo(Model):
 
 
         :param deliverables: The deliverables of this CourseInfo.
-        :type deliverables: List[DeliverableInfo]
+        :type deliverables: Dict[str, DeliverableInfo]
         """
 
         self._deliverables = deliverables

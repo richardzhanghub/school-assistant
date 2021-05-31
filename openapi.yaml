@@ -30,16 +30,9 @@ paths:
                 $ref: '#/components/schemas/AccessToken'
         '400':
           $ref: '#/components/responses/BadRequest'
-  /users/{username}:
+  /user:
     get:
       summary: Get user's information
-      parameters:
-        - name: username
-          in: path
-          description: Username
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: OK
@@ -57,13 +50,6 @@ paths:
           $ref: '#/components/responses/NotFoundError'
     put:
       summary: Update user's information
-      parameters:
-        - name: username
-          in: path
-          description: Username
-          required: true
-          schema:
-            type: string
       requestBody:
         content:
           application/json:
@@ -214,9 +200,9 @@ components:
           minimum: 0
           maximum: 100     
         deliverables:
-          type: array
-          items:
-            $ref: '#/components/schemas/DeliverableInfo'
+          type: object
+          additionalProperties:
+           $ref: '#/components/schemas/DeliverableInfo'
         time_spent:
           type: array
           items:
@@ -282,8 +268,8 @@ components:
           format: date-time
           type: string
         courses:
-          type: array
-          items:
+          type: object
+          additionalProperties:
             $ref: '#/components/schemas/CourseInfo'
       required:
           - 'username'

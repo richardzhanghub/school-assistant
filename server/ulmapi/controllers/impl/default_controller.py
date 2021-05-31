@@ -10,6 +10,8 @@ from ulmapi.db import models
 from ulmapi.dto.access_token import AccessToken
 from ulmapi.dto.user_credentials import UserCredentials
 from ulmapi.dto.signup_info import SignupInfo
+from ulmapi.controllers.util.db_converter import user_info_from_db, user_info_to_db
+from ulmapi.dto.user_info import UserInfo
 
 
 LOG = logging.getLogger(__name__)
@@ -62,31 +64,38 @@ def signup_post(signup_info=None):  # noqa: E501
     return 200
 
 
-def users_username_get(username):  # noqa: E501
+def user_get(user):  # noqa: E501
     """Get user&#39;s information
 
      # noqa: E501
 
-    :param username: Username
-    :type username: str
 
     :rtype: List[UserInfo]
     """
-    return 'do some magic!'
+    LOG.info('The current user is \'%s\'', user)
+    try:
+        user = models.User.objects.get(username=user)
+    except DoesNotExist:
+        return flask.Response(status=404)
+            
+    return user_info_from_db(user)
 
 
-def users_username_put(username, user_info=None):  # noqa: E501
+def user_put(user, user_info=None):  # noqa: E501
     """Update user&#39;s information
 
      # noqa: E501
 
-    :param username: Username
-    :type username: str
     :param user_info: 
     :type user_info: dict | bytes
 
     :rtype: UserInfo
     """
-    if connexion.request.is_json:
-        user_info = UserInfo.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+    user_info = UserInfo.from_dict(connexion.request.get_json())
+    try:
+        original_user = models.User.objects.get(username=user)
+    except DoesNotExist:
+        return flask.Response(status=401)
+
+    user_info_to_db(original_user, user_info)
+    original_user.save()

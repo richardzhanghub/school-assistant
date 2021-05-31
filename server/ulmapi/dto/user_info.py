@@ -27,13 +27,13 @@ class UserInfo(Model):
         :param joined_at: The joined_at of this UserInfo.  # noqa: E501
         :type joined_at: datetime
         :param courses: The courses of this UserInfo.  # noqa: E501
-        :type courses: List[CourseInfo]
+        :type courses: Dict[str, CourseInfo]
         """
         self.openapi_types = {
             'username': str,
             'email': str,
             'joined_at': datetime,
-            'courses': List[CourseInfo]
+            'courses': Dict[str, CourseInfo]
         }
 
         self.attribute_map = {
@@ -136,7 +136,7 @@ class UserInfo(Model):
 
 
         :return: The courses of this UserInfo.
-        :rtype: List[CourseInfo]
+        :rtype: Dict[str, CourseInfo]
         """
         return self._courses
 
@@ -146,7 +146,7 @@ class UserInfo(Model):
 
 
         :param courses: The courses of this UserInfo.
-        :type courses: List[CourseInfo]
+        :type courses: Dict[str, CourseInfo]
         """
 
         self._courses = courses

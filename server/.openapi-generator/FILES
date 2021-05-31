@@ -1,6 +1,5 @@
 .dockerignore
 Dockerfile
-requirements.txt
 setup.py
 ulmapi/controllers/impl/__init__.py
 ulmapi/controllers/impl/default_controller.py

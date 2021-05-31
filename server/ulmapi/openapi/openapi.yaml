@@ -147,18 +147,9 @@ paths:
       security: []
       summary: Creates a new user (signup)
       x-openapi-router-controller: ulmapi.controllers.impl.default_controller
-  /users/{username}:
+  /user:
     get:
-      operationId: users_username_get
-      parameters:
-      - description: Username
-        explode: false
-        in: path
-        name: username
-        required: true
-        schema:
-          type: string
-        style: simple
+      operationId: user_get
       responses:
         "200":
           content:
@@ -178,16 +169,7 @@ paths:
       summary: Get user's information
       x-openapi-router-controller: ulmapi.controllers.impl.default_controller
     put:
-      operationId: users_username_put
-      parameters:
-      - description: Username
-        explode: false
-        in: path
-        name: username
-        required: true
-        schema:
-          type: string
-        style: simple
+      operationId: user_put
       requestBody:
         content:
           application/json:
@@ -225,16 +207,12 @@ components:
         course_id: course_id
         course_name: course_name
         deliverables:
-        - grade: 14
-          weight: 59
-          due_at: 2000-01-23T04:56:07.000+00:00
-          completed: true
-          deliverable_name: deliverable_name
-        - grade: 14
-          weight: 59
-          due_at: 2000-01-23T04:56:07.000+00:00
-          completed: true
-          deliverable_name: deliverable_name
+          key:
+            grade: 14
+            weight: 59
+            due_at: 2000-01-23T04:56:07.000+00:00
+            completed: true
+            deliverable_name: deliverable_name
         desired_grade: 60
         time_spent:
         - notes: notes
@@ -261,9 +239,9 @@ components:
           minimum: 0
           type: integer
         deliverables:
-          items:
+          additionalProperties:
             $ref: '#/components/schemas/DeliverableInfo'
-          type: array
+          type: object
         time_spent:
           items:
             $ref: '#/components/schemas/TimeSpentInfo'
@@ -331,50 +309,25 @@ components:
       example:
         joined_at: 2000-01-23T04:56:07.000+00:00
         courses:
-        - expected_difficulty: 1
-          course_id: course_id
-          course_name: course_name
-          deliverables:
-          - grade: 14
-            weight: 59
-            due_at: 2000-01-23T04:56:07.000+00:00
-            completed: true
-            deliverable_name: deliverable_name
-          - grade: 14
-            weight: 59
-            due_at: 2000-01-23T04:56:07.000+00:00
-            completed: true
-            deliverable_name: deliverable_name
-          desired_grade: 60
-          time_spent:
-          - notes: notes
-            started_at: 2000-01-23T04:56:07.000+00:00
-            ended_at: 2000-01-23T04:56:07.000+00:00
-          - notes: notes
-            started_at: 2000-01-23T04:56:07.000+00:00
-            ended_at: 2000-01-23T04:56:07.000+00:00
-        - expected_difficulty: 1
-          course_id: course_id
-          course_name: course_name
-          deliverables:
-          - grade: 14
-            weight: 59
-            due_at: 2000-01-23T04:56:07.000+00:00
-            completed: true
-            deliverable_name: deliverable_name
-          - grade: 14
-            weight: 59
-            due_at: 2000-01-23T04:56:07.000+00:00
-            completed: true
-            deliverable_name: deliverable_name
-          desired_grade: 60
-          time_spent:
-          - notes: notes
-            started_at: 2000-01-23T04:56:07.000+00:00
-            ended_at: 2000-01-23T04:56:07.000+00:00
-          - notes: notes
-            started_at: 2000-01-23T04:56:07.000+00:00
-            ended_at: 2000-01-23T04:56:07.000+00:00
+          key:
+            expected_difficulty: 1
+            course_id: course_id
+            course_name: course_name
+            deliverables:
+              key:
+                grade: 14
+                weight: 59
+                due_at: 2000-01-23T04:56:07.000+00:00
+                completed: true
+                deliverable_name: deliverable_name
+            desired_grade: 60
+            time_spent:
+            - notes: notes
+              started_at: 2000-01-23T04:56:07.000+00:00
+              ended_at: 2000-01-23T04:56:07.000+00:00
+            - notes: notes
+              started_at: 2000-01-23T04:56:07.000+00:00
+              ended_at: 2000-01-23T04:56:07.000+00:00
         email: email
         username: username
       properties:
@@ -388,9 +341,9 @@ components:
           format: date-time
           type: string
         courses:
-          items:
+          additionalProperties:
             $ref: '#/components/schemas/CourseInfo'
-          type: array
+          type: object
       required:
       - email
       - username
