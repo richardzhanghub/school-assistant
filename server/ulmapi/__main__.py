@@ -13,6 +13,7 @@ def main():
 
     # Configure routes from OpenAPI file
     app = connexion.App(__name__, specification_dir='./openapi/')
+    app.app.register_blueprint(ulmapi.flask_blueprint)
     app.app.json_encoder = encoder.JSONEncoder
     app.add_api('openapi.yaml',
                 arguments={'title': 'University Life Manager API'},
