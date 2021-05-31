@@ -100,6 +100,7 @@ def login_post(user_credentials=None):  # noqa: E501
     if user is None or not verify_password(user_credentials.password, user["password"]):
         return flask.Response(status=401)
     # TODO(Richard): Return an access token
+    access_token = encode_auth_token(user_credentials.username)
     return AccessToken(access_token="admin_bearer_token")
 
 

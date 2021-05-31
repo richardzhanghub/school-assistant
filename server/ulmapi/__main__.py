@@ -21,6 +21,7 @@ def main():
                                   'ssl=true&replicaSet=atlas-iveasl-shard-0&authSource=admin&retryWrites=true&w=majority'\
         .format(mongo_username, mongo_password)
     ulmapi.mongo = PyMongo(app.app)
+    app.app.config['SECRET_KEY'] = 'UuFCpekY8eCxf8m'
     app.run(port=8080)
 
 
