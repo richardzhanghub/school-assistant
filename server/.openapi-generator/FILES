@@ -3,7 +3,6 @@ Dockerfile
 requirements.txt
 setup.py
 ulmapi/controllers/impl/__init__.py
-ulmapi/controllers/impl/course_controller.py
 ulmapi/controllers/impl/default_controller.py
 ulmapi/controllers/impl/example_controller.py
 ulmapi/controllers/impl/security_controller_.py
@@ -12,11 +11,11 @@ ulmapi/dto/access_token.py
 ulmapi/dto/base_model_.py
 ulmapi/dto/cat.py
 ulmapi/dto/course_info.py
-ulmapi/dto/create_course_response.py
-ulmapi/dto/delete_course_response.py
+ulmapi/dto/deliverable_info.py
 ulmapi/dto/signup_info.py
-ulmapi/dto/update_course_response.py
+ulmapi/dto/time_spent_info.py
 ulmapi/dto/user_credentials.py
+ulmapi/dto/user_info.py
 ulmapi/encoder.py
 ulmapi/openapi/openapi.yaml
 ulmapi/typing_utils.py

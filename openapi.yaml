@@ -30,34 +30,9 @@ paths:
                 $ref: '#/components/schemas/AccessToken'
         '400':
           $ref: '#/components/responses/BadRequest'
-  /users/{username}/course:
-    post:
-      summary: Create a new course for the user
-      parameters:
-        - name: username
-          in: path
-          description: Username
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CourseInfo'
-      responses:
-        '201':
-          description: Course created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateCourseResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-      tags:
-        - Course
+  /users/{username}:
     get:
-      summary: Get all courses for the user
+      summary: Get user's information
       parameters:
         - name: username
           in: path
@@ -71,56 +46,21 @@ paths:
           content:
             application/json:
               schema:
-                type: array
+                type: object
                 items:
-                  $ref: '#/components/schemas/CourseInfo'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-      tags:
-        - Course
-  /users/{username}/course/{courseID}:
-    get:
-      summary: Get course by id for the user
-      parameters:
-        - name: username
-          in: path
-          description: Username
-          required: true
-          schema:
-            type: string
-        - name: courseID
-          in: path
-          description: Course ID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CourseInfo'
+                  $ref: '#/components/schemas/UserInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/AuthorizationError'
         '404':
           $ref: '#/components/responses/NotFoundError'
-      tags:
-        - Course
     put:
-      summary: Replace a course for the user
+      summary: Update user's information
       parameters:
         - name: username
           in: path
           description: Username
-          required: true
-          schema:
-            type: string
-        - name: courseID
-          in: path
-          description: Course ID
           required: true
           schema:
             type: string
@@ -128,52 +68,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CourseInfo'
+              $ref: '#/components/schemas/UserInfo'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpdateCourseResponse'
+                $ref: '#/components/schemas/UserInfo'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/AuthorizationError'
         '404':
           $ref: '#/components/responses/NotFoundError'
-      tags:
-        - Course
-    delete:
-      summary: Delete a course for the user
-      parameters:
-        - name: username
-          in: path
-          description: Username
-          required: true
-          schema:
-            type: string
-        - name: courseID
-          in: path
-          description: Course ID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeleteCourseResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/AuthorizationError'
-        '404':
-          $ref: '#/components/responses/NotFoundError'
-      tags:
-        - Course
   /login:
     post:
       summary: Exchange username and password for access token
@@ -304,47 +212,82 @@ components:
           type: integer
           format: int32
           minimum: 0
-          maximum: 100       
+          maximum: 100     
+        deliverables:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeliverableInfo'
+        time_spent:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSpentInfo'
       required:
         - 'course_id'
         - 'course_name'
         - 'expected_difficulty'   
         - 'desired_grade'
-    CreateCourseResponse:
+    DeliverableInfo:
       type: object
       properties:
-        created_at:
+        deliverable_name:
           type: string
-          format: date-time 
-        course_id:
+          minLength: 1
+        grade:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+        weight:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100     
+        due_at:
           type: string
-        username:
-          type: string
-      required:
-        - 'created_at'
-        - 'course_id'
-        - 'username'  
-    UpdateCourseResponse:
-      type: object
-      properties:
-        updated_at:
-          type: string
-          format: date-time 
-        course_id:
-          type: string
-        username:
-          type: string
-      required:
-        - 'updated_at'
-        - 'course_id'
-        - 'username'  
-    DeleteCourseResponse:
-      type: object
-      properties:
-        deleted:
+          format: date-time
+        completed:
           type: boolean
       required:
-        - 'deleted'   
+        - 'deliverable_name'
+        - 'grade'
+        - 'weight'   
+        - 'due_at'
+        - 'completed'
+    TimeSpentInfo:
+      type: object
+      properties:
+        notes:
+          type: string
+          minLength: 1   
+        started_at:
+          type: string
+          format: date-time
+        ended_at:
+          type: string
+          format: date-time
+      required:
+        - 'notes'
+        - 'started_at'
+        - 'ended_at'   
+    UserInfo:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          minLength: 1
+        joined_at:
+          format: date-time
+          type: string
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseInfo'
+      required:
+          - 'username'
+          - 'email'
     UserCredentials:
       type: object
       properties:

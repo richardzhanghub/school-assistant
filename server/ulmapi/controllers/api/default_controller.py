@@ -4,6 +4,7 @@ import six
 from ulmapi.dto.access_token import AccessToken  # noqa: E501
 from ulmapi.dto.signup_info import SignupInfo  # noqa: E501
 from ulmapi.dto.user_credentials import UserCredentials  # noqa: E501
+from ulmapi.dto.user_info import UserInfo  # noqa: E501
 from ulmapi import util
 
 
@@ -34,4 +35,34 @@ def signup_post(signup_info=None):  # noqa: E501
     """
     if connexion.request.is_json:
         signup_info = SignupInfo.from_dict(connexion.request.get_json())  # noqa: E501
+    return 'do some magic!'
+
+
+def users_username_get(username):  # noqa: E501
+    """Get user&#39;s information
+
+     # noqa: E501
+
+    :param username: Username
+    :type username: str
+
+    :rtype: List[UserInfo]
+    """
+    return 'do some magic!'
+
+
+def users_username_put(username, user_info=None):  # noqa: E501
+    """Update user&#39;s information
+
+     # noqa: E501
+
+    :param username: Username
+    :type username: str
+    :param user_info: 
+    :type user_info: dict | bytes
+
+    :rtype: UserInfo
+    """
+    if connexion.request.is_json:
+        user_info = UserInfo.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'
