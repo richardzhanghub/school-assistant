@@ -60,8 +60,3 @@ When you add a new endpoint or modify an existing one:
   into `<REPOSITORY>/server/ulmapi/controllers/impl` and fill in the application
   logic. See existing endpoints for examples - very little Flask knowledge is
   required, you're just writing Python :)
-  
-  
-  
-## Setup mongoDB
-The pymongo connector is already included in requirements.txt.

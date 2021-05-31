@@ -4,7 +4,6 @@ import connexion
 import logging
 import ulmapi
 
-from flask_pymongo import PyMongo
 from ulmapi import encoder
 
 
@@ -22,12 +21,12 @@ def main():
     # Configure MongoDB
     mongo_username = 'dev'
     mongo_password = 'UuFCpekY8eCxf8m'
-    app.app.config['MONGO_URI'] = 'mongodb://{}:{}@cluster0-shard-00-00.vx0sn.mongodb.net:27017,' \
+    app.app.config['MONGODB_HOST'] = 'mongodb://{}:{}@cluster0-shard-00-00.vx0sn.mongodb.net:27017,' \
                                   'cluster0-shard-00-01.vx0sn.mongodb.net:27017,' \
                                   'cluster0-shard-00-02.vx0sn.mongodb.net:27017/ULM?' \
                                   'ssl=true&replicaSet=atlas-iveasl-shard-0&authSource=admin&retryWrites=true&w=majority' \
         .format(mongo_username, mongo_password)
-    ulmapi.mongo = PyMongo(app.app)
+    ulmapi.mongo_db.init_app(app.app)
 
     # Configure JWT
     app.app.config['SECRET_KEY'] = '2uFCpekY8eCxf8m2'

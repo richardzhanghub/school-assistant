@@ -43,13 +43,9 @@ def encode_auth_token(user_id):
     Generates the Auth Token
     :return: string
     """
-    try:
-        payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=0),
-            'iat': datetime.datetime.utcnow(),
-            'sub': user_id
-        }
-        return jwt.encode(payload, get_flask_app().config.get('SECRET_KEY'), algorithm='HS256')
-    except Exception as e:
-        print(e)
-        return e
+    payload = {
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=0),
+        'iat': datetime.datetime.utcnow(),
+        'sub': user_id
+    }
+    return jwt.encode(payload, get_flask_app().config.get('SECRET_KEY'), algorithm='HS256')

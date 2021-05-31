@@ -25,7 +25,9 @@ paths:
         "401":
           description: Credentials are missing or invalid
       summary: Get all cats for the user
-      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+      tags:
+      - example
+      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
     post:
       operationId: cat_post
       requestBody:
@@ -43,7 +45,9 @@ paths:
         "401":
           description: Credentials are missing or invalid
       summary: Create a new cat for the user
-      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+      tags:
+      - example
+      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
   /cat/{catId}:
     get:
       operationId: cat_cat_id_get
@@ -68,7 +72,9 @@ paths:
         "404":
           description: Entity could not be found
       summary: Get cat by id for the user
-      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+      tags:
+      - example
+      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
     put:
       operationId: cat_cat_id_put
       parameters:
@@ -97,7 +103,9 @@ paths:
         "404":
           description: Entity could not be found
       summary: Replace a cat for the user
-      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+      tags:
+      - example
+      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
   /login:
     post:
       operationId: login_post
@@ -139,6 +147,181 @@ paths:
       security: []
       summary: Creates a new user (signup)
       x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+  /users/{username}/course:
+    get:
+      operationId: users_username_course_get
+      parameters:
+      - description: Username
+        explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/CourseInfo'
+                type: array
+          description: OK
+        "400":
+          description: A malformed request could not be processed, e.g. a field must
+            be unique or non-empty but was not
+      summary: Get all courses for the user
+      tags:
+      - Course
+      x-openapi-router-controller: ulmapi.controllers.impl.course_controller
+    post:
+      operationId: users_username_course_post
+      parameters:
+      - description: Username
+        explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInfo'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCourseResponse'
+          description: Course created
+        "400":
+          description: A malformed request could not be processed, e.g. a field must
+            be unique or non-empty but was not
+      summary: Create a new course for the user
+      tags:
+      - Course
+      x-openapi-router-controller: ulmapi.controllers.impl.course_controller
+  /users/{username}/course/{courseID}:
+    delete:
+      operationId: users_username_course_course_iddelete
+      parameters:
+      - description: Username
+        explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Course ID
+        explode: false
+        in: path
+        name: courseID
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCourseResponse'
+          description: OK
+        "400":
+          description: A malformed request could not be processed, e.g. a field must
+            be unique or non-empty but was not
+        "401":
+          description: Credentials are missing or invalid
+        "404":
+          description: Entity could not be found
+      summary: Delete a course for the user
+      tags:
+      - Course
+      x-openapi-router-controller: ulmapi.controllers.impl.course_controller
+    get:
+      operationId: users_username_course_course_idget
+      parameters:
+      - description: Username
+        explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Course ID
+        explode: false
+        in: path
+        name: courseID
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseInfo'
+          description: OK
+        "400":
+          description: A malformed request could not be processed, e.g. a field must
+            be unique or non-empty but was not
+        "401":
+          description: Credentials are missing or invalid
+        "404":
+          description: Entity could not be found
+      summary: Get course by id for the user
+      tags:
+      - Course
+      x-openapi-router-controller: ulmapi.controllers.impl.course_controller
+    put:
+      operationId: users_username_course_course_idput
+      parameters:
+      - description: Username
+        explode: false
+        in: path
+        name: username
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Course ID
+        explode: false
+        in: path
+        name: courseID
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInfo'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCourseResponse'
+          description: OK
+        "400":
+          description: A malformed request could not be processed, e.g. a field must
+            be unique or non-empty but was not
+        "401":
+          description: Credentials are missing or invalid
+        "404":
+          description: Entity could not be found
+      summary: Replace a course for the user
+      tags:
+      - Course
+      x-openapi-router-controller: ulmapi.controllers.impl.course_controller
 components:
   responses:
     AuthorizationError:
@@ -149,6 +332,80 @@ components:
     NotFoundError:
       description: Entity could not be found
   schemas:
+    CourseInfo:
+      example:
+        expected_difficulty: 1
+        course_id: course_id
+        course_name: course_name
+        desired_grade: 60
+      properties:
+        course_id:
+          minLength: 1
+          type: string
+        course_name:
+          minLength: 1
+          type: string
+        expected_difficulty:
+          format: int32
+          maximum: 5
+          minimum: 1
+          type: integer
+        desired_grade:
+          format: int32
+          maximum: 100
+          minimum: 0
+          type: integer
+      required:
+      - course_id
+      - course_name
+      - desired_grade
+      - expected_difficulty
+      type: object
+    CreateCourseResponse:
+      example:
+        course_id: course_id
+        created_at: 2000-01-23T04:56:07.000+00:00
+        username: username
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        course_id:
+          type: string
+        username:
+          type: string
+      required:
+      - course_id
+      - created_at
+      - username
+      type: object
+    UpdateCourseResponse:
+      example:
+        course_id: course_id
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        username: username
+      properties:
+        updated_at:
+          format: date-time
+          type: string
+        course_id:
+          type: string
+        username:
+          type: string
+      required:
+      - course_id
+      - updated_at
+      - username
+      type: object
+    DeleteCourseResponse:
+      example:
+        deleted: true
+      properties:
+        deleted:
+          type: boolean
+      required:
+      - deleted
+      type: object
     UserCredentials:
       example:
         password: password

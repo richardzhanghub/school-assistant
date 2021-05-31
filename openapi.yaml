@@ -30,6 +30,150 @@ paths:
                 $ref: '#/components/schemas/AccessToken'
         '400':
           $ref: '#/components/responses/BadRequest'
+  /users/{username}/course:
+    post:
+      summary: Create a new course for the user
+      parameters:
+        - name: username
+          in: path
+          description: Username
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInfo'
+      responses:
+        '201':
+          description: Course created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCourseResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      tags:
+        - Course
+    get:
+      summary: Get all courses for the user
+      parameters:
+        - name: username
+          in: path
+          description: Username
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CourseInfo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      tags:
+        - Course
+  /users/{username}/course/{courseID}:
+    get:
+      summary: Get course by id for the user
+      parameters:
+        - name: username
+          in: path
+          description: Username
+          required: true
+          schema:
+            type: string
+        - name: courseID
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseInfo'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      tags:
+        - Course
+    put:
+      summary: Replace a course for the user
+      parameters:
+        - name: username
+          in: path
+          description: Username
+          required: true
+          schema:
+            type: string
+        - name: courseID
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInfo'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCourseResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      tags:
+        - Course
+    delete:
+      summary: Delete a course for the user
+      parameters:
+        - name: username
+          in: path
+          description: Username
+          required: true
+          schema:
+            type: string
+        - name: courseID
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCourseResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+      tags:
+        - Course
   /login:
     post:
       summary: Exchange username and password for access token
@@ -65,6 +209,8 @@ paths:
                 $ref: '#/components/schemas/Cat'
         '401':
           $ref: '#/components/responses/AuthorizationError'
+      tags:
+        - example
     get:
       summary: Get all cats for the user
       responses:
@@ -78,6 +224,8 @@ paths:
                   $ref: '#/components/schemas/Cat'
         '401':
           $ref: '#/components/responses/AuthorizationError'
+      tags:
+        - example
   /cat/{catId}:
     get:
       summary: Get cat by id for the user
@@ -99,6 +247,8 @@ paths:
           $ref: '#/components/responses/AuthorizationError'
         '404':
           $ref: '#/components/responses/NotFoundError'
+      tags:
+        - example
     put:
       summary: Replace a cat for the user
       parameters:
@@ -124,6 +274,8 @@ paths:
           $ref: '#/components/responses/AuthorizationError'
         '404':
           $ref: '#/components/responses/NotFoundError'
+      tags:
+        - example
 components:
   responses:
     AuthorizationError:
@@ -134,6 +286,65 @@ components:
       description: Entity could not be found
   # Request and response objects, see https://app.swaggerhub.com/apis/j84guo/iot-api/1.0.0 for more examples
   schemas:
+    CourseInfo:
+      type: object
+      properties:
+        course_id:
+          type: string
+          minLength: 1
+        course_name:
+          type: string
+          minLength: 1
+        expected_difficulty:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 5
+        desired_grade:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100       
+      required:
+        - 'course_id'
+        - 'course_name'
+        - 'expected_difficulty'   
+        - 'desired_grade'
+    CreateCourseResponse:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time 
+        course_id:
+          type: string
+        username:
+          type: string
+      required:
+        - 'created_at'
+        - 'course_id'
+        - 'username'  
+    UpdateCourseResponse:
+      type: object
+      properties:
+        updated_at:
+          type: string
+          format: date-time 
+        course_id:
+          type: string
+        username:
+          type: string
+      required:
+        - 'updated_at'
+        - 'course_id'
+        - 'username'  
+    DeleteCourseResponse:
+      type: object
+      properties:
+        deleted:
+          type: boolean
+      required:
+        - 'deleted'   
     UserCredentials:
       type: object
       properties:
