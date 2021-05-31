@@ -1,5 +1,12 @@
+import datetime
 import jwt
+import logging
+
 from passlib.hash import bcrypt
+from ulmapi import get_flask_app
+
+
+LOG = logging.getLogger(__name__)
 
 
 def hash_password(password, rounds=8):
@@ -21,30 +28,28 @@ def info_from_bearerAuth(token):
     :return: Decoded token information or None if token is invalid
     :rtype: dict | None
     """
-    # TODO(Richard): Verify token and return the username linked to this token (e.g. JWT payload)
     try:
-        payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
-        return payload['username']
+        payload = jwt.decode(token, get_flask_app().config.get('SECRET_KEY'), algorithms=['HS256'])
+        return {'uid': payload['sub']}
     except jwt.ExpiredSignatureError:
-        return 'Signature expired. Please log in again.'
+        LOG.info('Token %s is expired', token)
+        return None
     except jwt.InvalidTokenError:
-        return 'Invalid token. Please log in again.'
+        LOG.info('Token %s is invalid', token)
+        return None
 
-def encode_auth_token(self, user_id):
+def encode_auth_token(user_id):
     """
     Generates the Auth Token
     :return: string
     """
     try:
         payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=0),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id
         }
-        return jwt.encode(
-            payload,
-            app.config.get('SECRET_KEY'),
-            algorithm='HS256'
-        )
+        return jwt.encode(payload, get_flask_app().config.get('SECRET_KEY'), algorithm='HS256')
     except Exception as e:
+        print(e)
         return e
