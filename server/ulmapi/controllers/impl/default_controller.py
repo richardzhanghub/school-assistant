@@ -4,9 +4,8 @@ import flask
 
 from pymongo.errors import DuplicateKeyError
 
-from ulmapi.controllers.impl.security_controller_ import hash_password, verify_password
-
 from ulmapi import get_mongo_db
+from ulmapi.controllers.impl.security_controller_ import hash_password, verify_password
 from ulmapi.dto.access_token import AccessToken
 from ulmapi.dto.cat import Cat
 from ulmapi.dto.user_credentials import UserCredentials
@@ -97,9 +96,12 @@ def login_post(user_credentials=None):  # noqa: E501
     :rtype: AccessToken
     """
     user_credentials = UserCredentials.from_dict(connexion.request.get_json())
-    if (user_credentials.username, user_credentials.password) == ("admin", "admin"):
-        return AccessToken(access_token="admin_bearer_token")
-    return flask.Response(status=401)
+    user = get_mongo_db().users.find_one({"username": user_credentials.username})
+    if user is None or not verify_password(user_credentials.password, user["password"]):
+        return flask.Response(status=401)
+    # TODO(Richard): Return an access token
+    return AccessToken(access_token="admin_bearer_token")
+
 
 
 def signup_post(signup_info=None):  # noqa: E501
