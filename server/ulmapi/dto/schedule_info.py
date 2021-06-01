@@ -15,7 +15,7 @@ class ScheduleInfo(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, name=None, starts_at=None, ends_at=None, time_allocations=None):  # noqa: E501
+    def __init__(self, name=None, starts_at=None, ends_at=None, max_study_hours=None, time_allocations=None):  # noqa: E501
         """ScheduleInfo - a model defined in OpenAPI
 
         :param name: The name of this ScheduleInfo.  # noqa: E501
@@ -24,6 +24,8 @@ class ScheduleInfo(Model):
         :type starts_at: date
         :param ends_at: The ends_at of this ScheduleInfo.  # noqa: E501
         :type ends_at: date
+        :param max_study_hours: The max_study_hours of this ScheduleInfo.  # noqa: E501
+        :type max_study_hours: int
         :param time_allocations: The time_allocations of this ScheduleInfo.  # noqa: E501
         :type time_allocations: Dict[str, float]
         """
@@ -31,6 +33,7 @@ class ScheduleInfo(Model):
             'name': str,
             'starts_at': date,
             'ends_at': date,
+            'max_study_hours': int,
             'time_allocations': Dict[str, float]
         }
 
@@ -38,12 +41,14 @@ class ScheduleInfo(Model):
             'name': 'name',
             'starts_at': 'starts_at',
             'ends_at': 'ends_at',
+            'max_study_hours': 'max_study_hours',
             'time_allocations': 'time_allocations'
         }
 
         self._name = name
         self._starts_at = starts_at
         self._ends_at = ends_at
+        self._max_study_hours = max_study_hours
         self._time_allocations = time_allocations
 
     @classmethod
@@ -127,6 +132,31 @@ class ScheduleInfo(Model):
             raise ValueError("Invalid value for `ends_at`, must not be `None`")  # noqa: E501
 
         self._ends_at = ends_at
+
+    @property
+    def max_study_hours(self):
+        """Gets the max_study_hours of this ScheduleInfo.
+
+
+        :return: The max_study_hours of this ScheduleInfo.
+        :rtype: int
+        """
+        return self._max_study_hours
+
+    @max_study_hours.setter
+    def max_study_hours(self, max_study_hours):
+        """Sets the max_study_hours of this ScheduleInfo.
+
+
+        :param max_study_hours: The max_study_hours of this ScheduleInfo.
+        :type max_study_hours: int
+        """
+        if max_study_hours is None:
+            raise ValueError("Invalid value for `max_study_hours`, must not be `None`")  # noqa: E501
+        if max_study_hours is not None and max_study_hours < 1:  # noqa: E501
+            raise ValueError("Invalid value for `max_study_hours`, must be a value greater than or equal to `1`")  # noqa: E501
+
+        self._max_study_hours = max_study_hours
 
     @property
     def time_allocations(self):

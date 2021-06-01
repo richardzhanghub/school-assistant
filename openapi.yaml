@@ -103,23 +103,6 @@ paths:
                 $ref: '#/components/schemas/ScheduleInfo'
         '401':
           $ref: '#/components/responses/AuthorizationError'
-      tags:
-        - example
-    get:
-      summary: Get all schedules for the user
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ScheduleInfo'
-        '401':
-          $ref: '#/components/responses/AuthorizationError'
-      tags:
-        - example
   /cat:
     post:
       summary: Create a new cat for the user
@@ -353,14 +336,19 @@ components:
         ends_at:
           format: date
           type: string
+        max_study_hours:
+          type: integer
+          format: int32
+          minimum: 1
         time_allocations:
           type: object
           additionalProperties:
-            type: float
+            type: number
       required:
         - 'name'
         - 'starts_at'
         - 'ends_at'
+        - 'max_study_hours'
     Cat:
       type: object
       properties:

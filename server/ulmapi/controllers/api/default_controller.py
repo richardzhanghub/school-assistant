@@ -2,6 +2,7 @@ import connexion
 import six
 
 from ulmapi.dto.access_token import AccessToken  # noqa: E501
+from ulmapi.dto.schedule_info import ScheduleInfo  # noqa: E501
 from ulmapi.dto.signup_info import SignupInfo  # noqa: E501
 from ulmapi.dto.user_credentials import UserCredentials  # noqa: E501
 from ulmapi.dto.user_info import UserInfo  # noqa: E501
@@ -20,6 +21,21 @@ def login_post(user_credentials=None):  # noqa: E501
     """
     if connexion.request.is_json:
         user_credentials = UserCredentials.from_dict(connexion.request.get_json())  # noqa: E501
+    return 'do some magic!'
+
+
+def schedule_post(schedule_info=None):  # noqa: E501
+    """Request generation of a new schedule
+
+     # noqa: E501
+
+    :param schedule_info: 
+    :type schedule_info: dict | bytes
+
+    :rtype: ScheduleInfo
+    """
+    if connexion.request.is_json:
+        schedule_info = ScheduleInfo.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'
 
 

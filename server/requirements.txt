@@ -5,6 +5,7 @@ connexion[swagger-ui]>=2.7.0
 flask_cors>=3.0.10
 flask_mongoengine>=1.0.0
 mongoengine>=0.22.1
+ortools>=8.2.8710
 passlib>=1.7.4
 PyJWT>=2.0.1
 python_dateutil>=2.8.1

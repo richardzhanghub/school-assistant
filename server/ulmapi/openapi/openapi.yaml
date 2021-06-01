@@ -127,23 +127,6 @@ paths:
       summary: Exchange username and password for access token
       x-openapi-router-controller: ulmapi.controllers.impl.default_controller
   /schedule:
-    get:
-      operationId: schedule_get
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/ScheduleInfo'
-                type: array
-          description: OK
-        "401":
-          description: Credentials are missing or invalid
-      summary: Get all schedules for the user
-      tags:
-      - example
-      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
     post:
       operationId: schedule_post
       requestBody:
@@ -161,9 +144,7 @@ paths:
         "401":
           description: Credentials are missing or invalid
       summary: Request generation of a new schedule
-      tags:
-      - example
-      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
   /signup:
     post:
       operationId: signup_post
@@ -431,9 +412,10 @@ components:
     ScheduleInfo:
       example:
         starts_at: 2000-01-23
+        max_study_hours: 1
         name: name
         time_allocations:
-          key: ""
+          key: 6.027456183070403
         ends_at: 2000-01-23
       properties:
         name:
@@ -445,12 +427,17 @@ components:
         ends_at:
           format: date
           type: string
+        max_study_hours:
+          format: int32
+          minimum: 1
+          type: integer
         time_allocations:
           additionalProperties:
-            type: float
+            type: number
           type: object
       required:
       - ends_at
+      - max_study_hours
       - name
       - starts_at
       type: object

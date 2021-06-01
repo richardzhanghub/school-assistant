@@ -2,7 +2,6 @@ import connexion
 import six
 
 from ulmapi.dto.cat import Cat  # noqa: E501
-from ulmapi.dto.schedule_info import ScheduleInfo  # noqa: E501
 from ulmapi import util
 
 
@@ -59,30 +58,4 @@ def cat_post(cat=None):  # noqa: E501
     """
     if connexion.request.is_json:
         cat = Cat.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
-
-
-def schedule_get():  # noqa: E501
-    """Get all schedules for the user
-
-     # noqa: E501
-
-
-    :rtype: List[ScheduleInfo]
-    """
-    return 'do some magic!'
-
-
-def schedule_post(schedule_info=None):  # noqa: E501
-    """Request generation of a new schedule
-
-     # noqa: E501
-
-    :param schedule_info: 
-    :type schedule_info: dict | bytes
-
-    :rtype: ScheduleInfo
-    """
-    if connexion.request.is_json:
-        schedule_info = ScheduleInfo.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'
