@@ -2,9 +2,8 @@ import datetime
 import jwt
 import logging
 
-from flask import current_app
 from passlib.hash import bcrypt
-from ulmapi import flask_blueprint
+from ulmapi import get_flask_app
 
 
 LOG = logging.getLogger(__name__)
@@ -30,7 +29,7 @@ def info_from_bearerAuth(token):
     :rtype: dict | None
     """
     try:
-        payload = jwt.decode(token, current_app.config.get('SECRET_KEY'), algorithms=['HS256'])
+        payload = jwt.decode(token, get_flask_app().config.get('SECRET_KEY'), algorithms=['HS256'])
         return {'uid': payload['sub']}
     except jwt.ExpiredSignatureError:
         LOG.info('Token %s is expired', token)
@@ -38,7 +37,6 @@ def info_from_bearerAuth(token):
     except jwt.InvalidTokenError:
         LOG.info('Token %s is invalid', token)
         return None
-
 
 def encode_auth_token(user_id):
     """
@@ -50,11 +48,4 @@ def encode_auth_token(user_id):
         'iat': datetime.datetime.utcnow(),
         'sub': user_id
     }
-    return jwt.encode(payload, current_app.config.get('SECRET_KEY'), algorithm='HS256')
-
-
-@flask_blueprint.after_request
-def after_request(response):
-    header = response.headers
-    header['Access-Control-Allow-Origin'] = '*'
-    return response
+    return jwt.encode(payload, get_flask_app().config.get('SECRET_KEY'), algorithm='HS256')

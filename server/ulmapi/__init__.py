@@ -1,6 +1,7 @@
-from flask import Blueprint
 from flask_mongoengine import MongoEngine
 
 mongo_db = MongoEngine()
 
-flask_blueprint = Blueprint('ulmapi_blueprint', __name__)
+flask_app = None
+def get_flask_app():
+    return flask_app
