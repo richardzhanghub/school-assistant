@@ -86,6 +86,40 @@ paths:
                 $ref: '#/components/schemas/AccessToken'
         '401':
           $ref: '#/components/responses/AuthorizationError'
+  /schedule:
+    post:
+      summary: Request generation of a new schedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleInfo'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleInfo'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+      tags:
+        - example
+    get:
+      summary: Get all schedules for the user
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScheduleInfo'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+      tags:
+        - example
   /cat:
     post:
       summary: Create a new cat for the user
@@ -307,6 +341,26 @@ components:
         - 'email'
         - 'username'
         - 'password'
+    ScheduleInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        starts_at:
+          format: date
+          type: string
+        ends_at:
+          format: date
+          type: string
+        time_allocations:
+          type: object
+          additionalProperties:
+            type: float
+      required:
+        - 'name'
+        - 'starts_at'
+        - 'ends_at'
     Cat:
       type: object
       properties:

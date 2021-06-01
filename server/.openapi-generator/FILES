@@ -11,6 +11,7 @@ ulmapi/dto/base_model_.py
 ulmapi/dto/cat.py
 ulmapi/dto/course_info.py
 ulmapi/dto/deliverable_info.py
+ulmapi/dto/schedule_info.py
 ulmapi/dto/signup_info.py
 ulmapi/dto/time_spent_info.py
 ulmapi/dto/user_credentials.py

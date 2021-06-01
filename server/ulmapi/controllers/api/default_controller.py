@@ -38,26 +38,22 @@ def signup_post(signup_info=None):  # noqa: E501
     return 'do some magic!'
 
 
-def users_username_get(username):  # noqa: E501
+def user_get():  # noqa: E501
     """Get user&#39;s information
 
      # noqa: E501
 
-    :param username: Username
-    :type username: str
 
     :rtype: List[UserInfo]
     """
     return 'do some magic!'
 
 
-def users_username_put(username, user_info=None):  # noqa: E501
+def user_put(user_info=None):  # noqa: E501
     """Update user&#39;s information
 
      # noqa: E501
 
-    :param username: Username
-    :type username: str
     :param user_info: 
     :type user_info: dict | bytes
 

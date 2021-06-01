@@ -126,6 +126,44 @@ paths:
       security: []
       summary: Exchange username and password for access token
       x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+  /schedule:
+    get:
+      operationId: schedule_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ScheduleInfo'
+                type: array
+          description: OK
+        "401":
+          description: Credentials are missing or invalid
+      summary: Get all schedules for the user
+      tags:
+      - example
+      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
+    post:
+      operationId: schedule_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleInfo'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleInfo'
+          description: Created
+        "401":
+          description: Credentials are missing or invalid
+      summary: Request generation of a new schedule
+      tags:
+      - example
+      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
   /signup:
     post:
       operationId: signup_post
@@ -389,6 +427,32 @@ components:
       - email
       - password
       - username
+      type: object
+    ScheduleInfo:
+      example:
+        starts_at: 2000-01-23
+        name: name
+        time_allocations:
+          key: ""
+        ends_at: 2000-01-23
+      properties:
+        name:
+          minLength: 1
+          type: string
+        starts_at:
+          format: date
+          type: string
+        ends_at:
+          format: date
+          type: string
+        time_allocations:
+          additionalProperties:
+            type: float
+          type: object
+      required:
+      - ends_at
+      - name
+      - starts_at
       type: object
     Cat:
       example:
