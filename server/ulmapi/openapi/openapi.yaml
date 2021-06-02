@@ -106,6 +106,53 @@ paths:
       tags:
       - example
       x-openapi-router-controller: ulmapi.controllers.impl.example_controller
+  /course:
+    post:
+      operationId: course_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInfo'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseInfo'
+          description: Created
+        "401":
+          description: Credentials are missing or invalid
+      summary: Create a new course for the user
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+  /course/{courseId}/deliverable:
+    post:
+      operationId: course_course_id_deliverable_post
+      parameters:
+      - description: Course ID
+        explode: false
+        in: path
+        name: courseId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliverableInfo'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverableInfo'
+          description: Created
+        "401":
+          description: Credentials are missing or invalid
+      summary: Create a new deliverable for the user's course
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
   /login:
     post:
       operationId: login_post

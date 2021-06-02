@@ -13,43 +13,58 @@ def time_spent_from_course(course):
 
 def deliverables_from_course(course):
     deliverables = {}
-    for (deliverable_key, deliverable) in course.deliverables.items():
-        deliverables[deliverable_key] = DeliverableInfo(deliverable_name=deliverable.deliverable_name, grade=deliverable.grade, weight=deliverable.weight, due_at=deliverable.due_at, completed=deliverable.completed)
+    for (deliverable_key, deliverable_db) in course.deliverables.items():
+        deliverables[deliverable_key] = deliverable_info_from_db(deliverable_db)
     return deliverables
 
+def deliverable_info_from_db(deliverable_db):
+    return DeliverableInfo(deliverable_name=deliverable_db.deliverable_name,
+                           grade=deliverable_db.grade,
+                           weight=deliverable_db.weight,
+                           due_at=deliverable_db.due_at,
+                           completed=deliverable_db.completed)
 
 def courses_from_user(user):
     courses = {}
-    for (course_key, course) in user.courses.items():
-        deliverables = deliverables_from_course(course)
-        time_spent = time_spent_from_course(course)
-        courses[course_key] = CourseInfo(course_id=course.course_id, course_name=course.course_name, expected_difficulty=course.expected_difficulty, desired_grade=course.desired_grade, deliverables=deliverables, time_spent=time_spent)
+    for (course_key, course_db) in user.courses.items():
+        courses[course_key] = course_info_from_db(course_db)
     return courses  
 
+def course_info_from_db(course_db):
+    deliverables = deliverables_from_course(course_db)
+    time_spent = time_spent_from_course(course_db)
+    return CourseInfo(course_id=course_db.course_id,
+                      course_name=course_db.course_name,
+                      expected_difficulty=course_db.expected_difficulty,
+                      desired_grade=course_db.desired_grade,
+                      deliverables=deliverables, time_spent=time_spent)
 
 def user_info_from_db(user):
     courses = courses_from_user(user)
     return UserInfo(username=user.username, email=user.email, joined_at=user.joined_at, courses=courses)
 
 
-def user_info_to_db(original_user, updated_val):
-    original_user.email = updated_val.email
-    original_user.username = updated_val.username
+def user_info_to_db(user_db, user_info):
+    user_db.email = user_info.email
+    user_db.username = user_info.username
 
-    original_user.courses.clear()
+    user_db.courses.clear()
 
-    for key, val in updated_val.courses.items():
-        original_user.courses[key] = course_info_to_db(val)
+    if user_info.courses is not None:
+        for key, val in user_info.courses.items():
+            user_db.courses[key] = course_info_to_db(val)
 
 
 def course_info_to_db(course_info):
     new_deliverables = {}
-    for key, val in course_info.deliverables.items():
-        new_deliverables[key] = deliverable_info_to_db(val)
+    if course_info.deliverables is not None:
+        for key, val in course_info.deliverables.items():
+            new_deliverables[key] = deliverable_info_to_db(val)
 
     new_time_spents = []
-    for time_spent in course_info.time_spent:
-        new_time_spents.append(time_spent_to_db(time_spent))
+    if course_info.time_spent is not None:
+        for time_spent in course_info.time_spent:
+            new_time_spents.append(time_spent_to_db(time_spent))
 
     new_course = models.Course(course_id=course_info.course_id,
                               course_name=course_info.course_name,

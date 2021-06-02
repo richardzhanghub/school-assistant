@@ -103,6 +103,47 @@ paths:
                 $ref: '#/components/schemas/ScheduleInfo'
         '401':
           $ref: '#/components/responses/AuthorizationError'
+  /course:
+    post:
+      summary: Create a new course for the user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInfo'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseInfo'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+  /course/{courseId}/deliverable:
+    post:
+      summary: Create a new deliverable for the user's course
+      parameters:
+        - name: courseId
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliverableInfo'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverableInfo'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
   /cat:
     post:
       summary: Create a new cat for the user
