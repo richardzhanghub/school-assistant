@@ -144,6 +144,30 @@ paths:
                 $ref: '#/components/schemas/DeliverableInfo'
         '401':
           $ref: '#/components/responses/AuthorizationError'
+  /course/{courseId}/timespent:
+    post:
+      summary: Create a new time spent for the user's course
+      parameters:
+        - name: courseId
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeSpentInfo'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSpentInfo'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
   /cat:
     post:
       summary: Create a new cat for the user

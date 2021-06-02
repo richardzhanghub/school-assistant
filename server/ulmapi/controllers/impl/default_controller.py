@@ -13,10 +13,12 @@ from ulmapi.dto.access_token import AccessToken
 from ulmapi.dto.user_credentials import UserCredentials
 from ulmapi.dto.signup_info import SignupInfo
 from ulmapi.controllers.util.db_converter import user_info_from_db, user_info_to_db, course_info_to_db, \
-    course_info_from_db, deliverable_info_to_db, deliverable_info_from_db
+    course_info_from_db, deliverable_info_to_db, deliverable_info_from_db, time_spent_info_from_db, \
+    time_spent_info_to_db
 from ulmapi.dto.course_info import CourseInfo
 from ulmapi.dto.deliverable_info import DeliverableInfo
 from ulmapi.dto.schedule_info import ScheduleInfo
+from ulmapi.dto.time_spent_info import TimeSpentInfo
 from ulmapi.dto.user_info import UserInfo
 
 LOG = logging.getLogger(__name__)
@@ -42,7 +44,6 @@ def course_course_id_deliverable_post(course_id, user):  # noqa: E501
     except DoesNotExist:
         return flask.Response(status=401)
 
-    print('course_id {}'.format(course_id))
     if course_id not in user_db.courses:
         return 'Course {} does not exist for user {}'.format(course_id, user), 400
     if deliverable_name in user_db.courses[course_id].deliverables:
@@ -52,6 +53,33 @@ def course_course_id_deliverable_post(course_id, user):  # noqa: E501
     user_db.courses[course_id].deliverables[deliverable_name] = deliverable_db
     user_db.save()
     return deliverable_info_from_db(user_db.courses[course_id].deliverables[deliverable_name])
+
+
+def course_course_id_timespent_post(course_id, user):  # noqa: E501
+    """Create a new deliverable for the user&#39;s course
+
+     # noqa: E501
+
+    :param course_id: Course ID
+    :type course_id: str
+    :param time_spent_info:
+    :type time_spent_info: dict | bytes
+
+    :rtype: TimeSpentInfo
+    """
+    time_spent_info = TimeSpentInfo.from_dict(connexion.request.get_json())  # noqa: E501
+    try:
+        user_db = models.User.objects.get(username=user)
+    except DoesNotExist:
+        return flask.Response(status=401)
+
+    if course_id not in user_db.courses:
+        return 'Course {} does not exist for user {}'.format(course_id, user), 400
+
+    time_spent_db = time_spent_info_to_db(time_spent_info)
+    user_db.courses[course_id].time_spent.append(time_spent_db)
+    user_db.save()
+    return time_spent_info_from_db(time_spent_db)
 
 
 def course_post(user):  # noqa: E501
@@ -81,7 +109,7 @@ def course_post(user):  # noqa: E501
     return course_info_from_db(user_db.courses[course_id])
 
 
-def login_post(credentials=None):  # noqa: E501
+def login_post():  # noqa: E501
     '''Login using username and password
 
     The user&#39;s credentials are exchanged for a bearer token. # noqa: E501

@@ -153,6 +153,34 @@ paths:
           description: Credentials are missing or invalid
       summary: Create a new deliverable for the user's course
       x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+  /course/{courseId}/timespent:
+    post:
+      operationId: course_course_id_timespent_post
+      parameters:
+      - description: Course ID
+        explode: false
+        in: path
+        name: courseId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeSpentInfo'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSpentInfo'
+          description: Created
+        "401":
+          description: Credentials are missing or invalid
+      summary: Create a new time spent for the user's course
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
   /login:
     post:
       operationId: login_post

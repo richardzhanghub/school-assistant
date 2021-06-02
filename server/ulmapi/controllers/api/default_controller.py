@@ -6,6 +6,7 @@ from ulmapi.dto.course_info import CourseInfo  # noqa: E501
 from ulmapi.dto.deliverable_info import DeliverableInfo  # noqa: E501
 from ulmapi.dto.schedule_info import ScheduleInfo  # noqa: E501
 from ulmapi.dto.signup_info import SignupInfo  # noqa: E501
+from ulmapi.dto.time_spent_info import TimeSpentInfo  # noqa: E501
 from ulmapi.dto.user_credentials import UserCredentials  # noqa: E501
 from ulmapi.dto.user_info import UserInfo  # noqa: E501
 from ulmapi import util
@@ -25,6 +26,23 @@ def course_course_id_deliverable_post(course_id, deliverable_info=None):  # noqa
     """
     if connexion.request.is_json:
         deliverable_info = DeliverableInfo.from_dict(connexion.request.get_json())  # noqa: E501
+    return 'do some magic!'
+
+
+def course_course_id_timespent_post(course_id, time_spent_info=None):  # noqa: E501
+    """Create a new time spent for the user&#39;s course
+
+     # noqa: E501
+
+    :param course_id: Course ID
+    :type course_id: str
+    :param time_spent_info: 
+    :type time_spent_info: dict | bytes
+
+    :rtype: TimeSpentInfo
+    """
+    if connexion.request.is_json:
+        time_spent_info = TimeSpentInfo.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'
 
 
