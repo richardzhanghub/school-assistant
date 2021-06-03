@@ -135,6 +135,7 @@ paths:
         name: courseId
         required: true
         schema:
+          pattern: '[a-z0-9]+'
           type: string
         style: simple
       requestBody:
@@ -163,6 +164,7 @@ paths:
         name: courseId
         required: true
         schema:
+          pattern: '[a-z0-9]+'
           type: string
         style: simple
       requestBody:
@@ -302,8 +304,8 @@ components:
         course_name: course_name
         deliverables:
           key:
-            grade: 14
-            weight: 59
+            grade: 14.658129805029452
+            weight: 59.621339166831824
             due_at: 2000-01-23T04:56:07.000+00:00
             completed: true
             deliverable_name: deliverable_name
@@ -318,6 +320,7 @@ components:
       properties:
         course_id:
           minLength: 1
+          pattern: '[a-z0-9]+'
           type: string
         course_name:
           minLength: 1
@@ -348,8 +351,8 @@ components:
       type: object
     DeliverableInfo:
       example:
-        grade: 14
-        weight: 59
+        grade: 14.658129805029452
+        weight: 59.621339166831824
         due_at: 2000-01-23T04:56:07.000+00:00
         completed: true
         deliverable_name: deliverable_name
@@ -358,15 +361,13 @@ components:
           minLength: 1
           type: string
         grade:
-          format: int32
           maximum: 100
           minimum: 0
-          type: integer
+          type: number
         weight:
-          format: int32
           maximum: 100
           minimum: 0
-          type: integer
+          type: number
         due_at:
           format: date-time
           type: string
@@ -376,7 +377,6 @@ components:
       - completed
       - deliverable_name
       - due_at
-      - grade
       - weight
       type: object
     TimeSpentInfo:
@@ -409,8 +409,8 @@ components:
             course_name: course_name
             deliverables:
               key:
-                grade: 14
-                weight: 59
+                grade: 14.658129805029452
+                weight: 59.621339166831824
                 due_at: 2000-01-23T04:56:07.000+00:00
                 completed: true
                 deliverable_name: deliverable_name

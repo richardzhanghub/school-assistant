@@ -21,9 +21,9 @@ class DeliverableInfo(Model):
         :param deliverable_name: The deliverable_name of this DeliverableInfo.  # noqa: E501
         :type deliverable_name: str
         :param grade: The grade of this DeliverableInfo.  # noqa: E501
-        :type grade: int
+        :type grade: float
         :param weight: The weight of this DeliverableInfo.  # noqa: E501
-        :type weight: int
+        :type weight: float
         :param due_at: The due_at of this DeliverableInfo.  # noqa: E501
         :type due_at: datetime
         :param completed: The completed of this DeliverableInfo.  # noqa: E501
@@ -31,8 +31,8 @@ class DeliverableInfo(Model):
         """
         self.openapi_types = {
             'deliverable_name': str,
-            'grade': int,
-            'weight': int,
+            'grade': float,
+            'weight': float,
             'due_at': datetime,
             'completed': bool
         }
@@ -93,7 +93,7 @@ class DeliverableInfo(Model):
 
 
         :return: The grade of this DeliverableInfo.
-        :rtype: int
+        :rtype: float
         """
         return self._grade
 
@@ -103,10 +103,8 @@ class DeliverableInfo(Model):
 
 
         :param grade: The grade of this DeliverableInfo.
-        :type grade: int
+        :type grade: float
         """
-        if grade is None:
-            raise ValueError("Invalid value for `grade`, must not be `None`")  # noqa: E501
         if grade is not None and grade > 100:  # noqa: E501
             raise ValueError("Invalid value for `grade`, must be a value less than or equal to `100`")  # noqa: E501
         if grade is not None and grade < 0:  # noqa: E501
@@ -120,7 +118,7 @@ class DeliverableInfo(Model):
 
 
         :return: The weight of this DeliverableInfo.
-        :rtype: int
+        :rtype: float
         """
         return self._weight
 
@@ -130,7 +128,7 @@ class DeliverableInfo(Model):
 
 
         :param weight: The weight of this DeliverableInfo.
-        :type weight: int
+        :type weight: float
         """
         if weight is None:
             raise ValueError("Invalid value for `weight`, must not be `None`")  # noqa: E501
