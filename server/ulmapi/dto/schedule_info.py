@@ -15,11 +15,9 @@ class ScheduleInfo(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, name=None, starts_at=None, ends_at=None, max_study_hours=None, time_allocations=None):  # noqa: E501
+    def __init__(self, starts_at=None, ends_at=None, max_study_hours=None, time_allocations=None):  # noqa: E501
         """ScheduleInfo - a model defined in OpenAPI
 
-        :param name: The name of this ScheduleInfo.  # noqa: E501
-        :type name: str
         :param starts_at: The starts_at of this ScheduleInfo.  # noqa: E501
         :type starts_at: date
         :param ends_at: The ends_at of this ScheduleInfo.  # noqa: E501
@@ -30,7 +28,6 @@ class ScheduleInfo(Model):
         :type time_allocations: Dict[str, float]
         """
         self.openapi_types = {
-            'name': str,
             'starts_at': date,
             'ends_at': date,
             'max_study_hours': int,
@@ -38,14 +35,12 @@ class ScheduleInfo(Model):
         }
 
         self.attribute_map = {
-            'name': 'name',
             'starts_at': 'starts_at',
             'ends_at': 'ends_at',
             'max_study_hours': 'max_study_hours',
             'time_allocations': 'time_allocations'
         }
 
-        self._name = name
         self._starts_at = starts_at
         self._ends_at = ends_at
         self._max_study_hours = max_study_hours
@@ -61,31 +56,6 @@ class ScheduleInfo(Model):
         :rtype: ScheduleInfo
         """
         return util.deserialize_model(dikt, cls)
-
-    @property
-    def name(self):
-        """Gets the name of this ScheduleInfo.
-
-
-        :return: The name of this ScheduleInfo.
-        :rtype: str
-        """
-        return self._name
-
-    @name.setter
-    def name(self, name):
-        """Sets the name of this ScheduleInfo.
-
-
-        :param name: The name of this ScheduleInfo.
-        :type name: str
-        """
-        if name is None:
-            raise ValueError("Invalid value for `name`, must not be `None`")  # noqa: E501
-        if name is not None and len(name) < 1:
-            raise ValueError("Invalid value for `name`, length must be greater than or equal to `1`")  # noqa: E501
-
-        self._name = name
 
     @property
     def starts_at(self):

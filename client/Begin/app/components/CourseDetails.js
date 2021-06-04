@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
   deliverablesContainer: {
     marginVertical: 20,
     backgroundColor: colors.white,
+    height:350
   },
   subTitle: {
     color: colors.secondary,

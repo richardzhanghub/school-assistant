@@ -2,6 +2,7 @@ from ulmapi import mongo_db
 
 
 class Deliverable(mongo_db.EmbeddedDocument):
+    deliverable_id = mongo_db.StringField(required=True)
     deliverable_name = mongo_db.StringField(required=True)
     grade = mongo_db.FloatField(min_value=0,
                                 max_value=100)
@@ -31,7 +32,14 @@ class Course(mongo_db.EmbeddedDocument):
     time_spent = mongo_db.ListField(mongo_db.EmbeddedDocumentField(TimeSpent))
 
 
+class Schedule(mongo_db.EmbeddedDocument):
+    starts_at = mongo_db.DateTimeField(required=True)
+    ends_at = mongo_db.DateTimeField(required=True)
+    time_allocations = mongo_db.MapField(field=mongo_db.FloatField(min_value=0))
+
+
 class User(mongo_db.Document):
+    current_schedule = mongo_db.EmbeddedDocumentField(Schedule)
     email = mongo_db.StringField(required=True, max_length=120, unique=True)
     username = mongo_db.StringField(required=True, unique=True)
     password = mongo_db.StringField(required=True)

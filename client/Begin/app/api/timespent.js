@@ -1,45 +1,32 @@
-import helper from "../utility/helper";
+import util from "../utility/helper";
 import client from "./client";
-
-const endpoint = "/user";
-
-const getCourses = () => {
-  //   console.log("hey");
-  return client.get(endpoint);
-};
-
 /*
     @ params:
         - course_id: String
         - newTimeSpent: 
-            Object {
-                ended_at: "2000-01-23T04:56:07Z",           // call helper.convertDateToString(Date date)
-                notes: "notes1",
-                started_at: "2000-01-23T04:56:07Z",         // call helper.convertDateToString(Date date)
+            Object{
+                ended_at: Date
+                notes: string,
+                started_at: Date
             }
+            ## Example:
+                const newTimeSpent = {
+                    ended_at: util.convertDateToString(new Date()),
+                    notes: "New Notes 2123",
+                    started_at: util.convertDateToString(new Date()),
+                };
         - Example: addTimeSpent() in ListingsScreen.js 
 */
 const addTimeSpent = (course_id, newTimeSpent) => {
-  getCourses().then((courses) => {
-    // Parse data to JS structure
-    const deserializedUserInfo = helper.deserializeGetUserResponse(
-      courses.data
-    );
+  const endpoint = `/course/${course_id}/timespent`;
 
-    // console.log("deserializedUserInfo", deserializedUserInfo);
-    const newData = helper.addTimeSpent(
-      deserializedUserInfo,
-      course_id,
-      newTimeSpent
-    );
+  const data = {
+    ended_at: util.convertDateToString(newTimeSpent.ended_at),
+    notes: "New Notes 2123",
+    started_at: util.convertDateToString(newTimeSpent.started_at),
+  };
 
-    // Serialize data to match BE endpoint
-    const serializedUserInfo = helper.serializePutUserRequestData(newData);
-
-    // console.log("FINAL", serializedUserInfo);
-
-    return client.put(endpoint, serializedUserInfo);
-  });
+  client.post(endpoint, data);
 };
 
 export default {

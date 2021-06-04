@@ -106,6 +106,150 @@ paths:
       tags:
       - example
       x-openapi-router-controller: ulmapi.controllers.impl.example_controller
+  /course:
+    post:
+      operationId: course_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInfo'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseInfo'
+          description: Created
+        "401":
+          description: Credentials are missing or invalid
+      summary: Create a new course for the user
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+  /course/{courseId}:
+    put:
+      operationId: course_course_id_put
+      parameters:
+      - description: Course ID
+        explode: false
+        in: path
+        name: courseId
+        required: true
+        schema:
+          pattern: '[a-z0-9]+'
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInfo'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseInfo'
+          description: Created
+        "401":
+          description: Credentials are missing or invalid
+      summary: Update a course for the user
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+  /course/{courseId}/deliverable:
+    post:
+      operationId: course_course_id_deliverable_post
+      parameters:
+      - description: Course ID
+        explode: false
+        in: path
+        name: courseId
+        required: true
+        schema:
+          pattern: '[a-z0-9]+'
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliverableInfo'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverableInfo'
+          description: Created
+        "401":
+          description: Credentials are missing or invalid
+      summary: Create a new deliverable for the user's course
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+  /course/{courseId}/deliverable/{deliverableId}:
+    put:
+      operationId: course_course_id_deliverable_deliverable_id_put
+      parameters:
+      - description: Course ID
+        explode: false
+        in: path
+        name: courseId
+        required: true
+        schema:
+          pattern: '[a-z0-9]+'
+          type: string
+        style: simple
+      - description: Deliverable ID (auto-generated on deliverable creation)
+        explode: false
+        in: path
+        name: deliverableId
+        required: true
+        schema:
+          pattern: '[a-z0-9]+'
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliverableInfo'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverableInfo'
+          description: Created
+        "401":
+          description: Credentials are missing or invalid
+      summary: Update a deliverable for the user's course
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+  /course/{courseId}/timespent:
+    post:
+      operationId: course_course_id_timespent_post
+      parameters:
+      - description: Course ID
+        explode: false
+        in: path
+        name: courseId
+        required: true
+        schema:
+          pattern: '[a-z0-9]+'
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeSpentInfo'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSpentInfo'
+          description: Created
+        "401":
+          description: Credentials are missing or invalid
+      summary: Create a new time spent for the user's course
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
   /login:
     post:
       operationId: login_post
@@ -187,29 +331,6 @@ paths:
           description: Entity could not be found
       summary: Get user's information
       x-openapi-router-controller: ulmapi.controllers.impl.default_controller
-    put:
-      operationId: user_put
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserInfo'
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserInfo'
-          description: OK
-        "400":
-          description: A malformed request could not be processed, e.g. a field must
-            be unique or non-empty but was not
-        "401":
-          description: Credentials are missing or invalid
-        "404":
-          description: Entity could not be found
-      summary: Update user's information
-      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
 components:
   responses:
     AuthorizationError:
@@ -227,8 +348,9 @@ components:
         course_name: course_name
         deliverables:
           key:
-            grade: 14
-            weight: 59
+            deliverable_id: deliverable_id
+            grade: 14.658129805029452
+            weight: 59.621339166831824
             due_at: 2000-01-23T04:56:07.000+00:00
             completed: true
             deliverable_name: deliverable_name
@@ -243,6 +365,7 @@ components:
       properties:
         course_id:
           minLength: 1
+          pattern: '[a-z0-9]+'
           type: string
         course_name:
           minLength: 1
@@ -273,25 +396,28 @@ components:
       type: object
     DeliverableInfo:
       example:
-        grade: 14
-        weight: 59
+        deliverable_id: deliverable_id
+        grade: 14.658129805029452
+        weight: 59.621339166831824
         due_at: 2000-01-23T04:56:07.000+00:00
         completed: true
         deliverable_name: deliverable_name
       properties:
+        deliverable_id:
+          minLength: 1
+          pattern: '[a-z0-9]+'
+          type: string
         deliverable_name:
           minLength: 1
           type: string
         grade:
-          format: int32
           maximum: 100
           minimum: 0
-          type: integer
+          type: number
         weight:
-          format: int32
           maximum: 100
           minimum: 0
-          type: integer
+          type: number
         due_at:
           format: date-time
           type: string
@@ -301,7 +427,6 @@ components:
       - completed
       - deliverable_name
       - due_at
-      - grade
       - weight
       type: object
     TimeSpentInfo:
@@ -334,8 +459,9 @@ components:
             course_name: course_name
             deliverables:
               key:
-                grade: 14
-                weight: 59
+                deliverable_id: deliverable_id
+                grade: 14.658129805029452
+                weight: 59.621339166831824
                 due_at: 2000-01-23T04:56:07.000+00:00
                 completed: true
                 deliverable_name: deliverable_name
@@ -413,14 +539,10 @@ components:
       example:
         starts_at: 2000-01-23
         max_study_hours: 1
-        name: name
         time_allocations:
-          key: ""
+          key: 6.027456183070403
         ends_at: 2000-01-23
       properties:
-        name:
-          minLength: 1
-          type: string
         starts_at:
           format: date
           type: string
@@ -433,12 +555,11 @@ components:
           type: integer
         time_allocations:
           additionalProperties:
-            type: float
+            type: number
           type: object
       required:
       - ends_at
       - max_study_hours
-      - name
       - starts_at
       type: object
     Cat:

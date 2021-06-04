@@ -48,26 +48,27 @@ paths:
           $ref: '#/components/responses/AuthorizationError'
         '404':
           $ref: '#/components/responses/NotFoundError'
-    put:
-      summary: Update user's information
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserInfo'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserInfo'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/AuthorizationError'
-        '404':
-          $ref: '#/components/responses/NotFoundError'
+# Do not use this endpoint anymore
+#    put:
+#      summary: Update user's information
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/UserInfo'
+#      responses:
+#        '200':
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/UserInfo'
+#        '400':
+#          $ref: '#/components/responses/BadRequest'
+#        '401':
+#          $ref: '#/components/responses/AuthorizationError'
+#        '404':
+#          $ref: '#/components/responses/NotFoundError'
   /login:
     post:
       summary: Exchange username and password for access token
@@ -101,6 +102,130 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScheduleInfo'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+  /course:
+    post:
+      summary: Create a new course for the user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInfo'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseInfo'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+  /course/{courseId}:
+    put:
+      summary: Update a course for the user
+      parameters:
+        - name: courseId
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: string
+            pattern: "[a-z0-9]+"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInfo'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourseInfo'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+  /course/{courseId}/deliverable:
+    post:
+      summary: Create a new deliverable for the user's course
+      parameters:
+        - name: courseId
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: string
+            pattern: "[a-z0-9]+"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliverableInfo'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverableInfo'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+  /course/{courseId}/deliverable/{deliverableId}:
+    put:
+      summary: Update a deliverable for the user's course
+      parameters:
+        - name: courseId
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: string
+            pattern: "[a-z0-9]+"
+        - name: deliverableId
+          in: path
+          description: Deliverable ID (auto-generated on deliverable creation)
+          required: true
+          schema:
+            type: string
+            pattern: "[a-z0-9]+"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliverableInfo'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliverableInfo'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
+  /course/{courseId}/timespent:
+    post:
+      summary: Create a new time spent for the user's course
+      parameters:
+        - name: courseId
+          in: path
+          description: Course ID
+          required: true
+          schema:
+            type: string
+            pattern: "[a-z0-9]+"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeSpentInfo'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSpentInfo'
         '401':
           $ref: '#/components/responses/AuthorizationError'
   /cat:
@@ -203,6 +328,7 @@ components:
         course_id:
           type: string
           minLength: 1
+          pattern: "[a-z0-9]+"
         course_name:
           type: string
           minLength: 1
@@ -232,17 +358,19 @@ components:
     DeliverableInfo:
       type: object
       properties:
+        deliverable_id:
+          type: string
+          minLength: 1
+          pattern: "[a-z0-9]+"
         deliverable_name:
           type: string
           minLength: 1
         grade:
-          type: integer
-          format: int32
+          type: number
           minimum: 0
           maximum: 100
         weight:
-          type: integer
-          format: int32
+          type: number
           minimum: 0
           maximum: 100     
         due_at:
@@ -252,7 +380,6 @@ components:
           type: boolean
       required:
         - 'deliverable_name'
-        - 'grade'
         - 'weight'   
         - 'due_at'
         - 'completed'
@@ -327,9 +454,6 @@ components:
     ScheduleInfo:
       type: object
       properties:
-        name:
-          type: string
-          minLength: 1
         starts_at:
           format: date
           type: string
@@ -343,9 +467,8 @@ components:
         time_allocations:
           type: object
           additionalProperties:
-            type: float
+            type: number
       required:
-        - 'name'
         - 'starts_at'
         - 'ends_at'
         - 'max_study_hours'

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Button, FlatList, StyleSheet } from "react-native";
 import coursesApi from "../api/courses";
-import timespentApi from "../api/timespent";
+import deliverableApi from "../api/deliverable";
 import ActivityIndicator from "../components/ActivityIndicator";
 import Card from "../components/Card";
 import Screen from "../components/Screen";
@@ -9,7 +9,6 @@ import AppText from "../components/Text";
 import colors from "../config/colors";
 import useApi from "../hooks/useApi";
 import routes from "../navigation/routes";
-import util from "../utility/helper";
 
 function ListingsScreen({ navigation }) {
   // not calling the function but just passing the reference
@@ -35,14 +34,39 @@ function ListingsScreen({ navigation }) {
     console.log("clean data", cleanData);
   };
 
-  const addTimeSpent = () => {
-    const newTimeSpent = {
-      ended_at: util.convertDateToString(new Date()),
-      notes: "New Notes 2123",
-      started_at: util.convertDateToString(new Date()),
+  // const addCourse = () => {
+  //   const newCourse = {
+  //     courseName: "barry",
+  //     courseNumber: "ECE123",
+  //     difficulty: "1",
+  //     grade: "12",
+  //   };
+
+  //   coursesApi.addCourse(newCourse);
+  // };
+
+  // const addTimeSpent = () => {
+  //   const newTimeSpent = {
+  //     ended_at: new Date(),
+  //     notes: "New Notes 2123",
+  //     started_at: new Date(),
+  //   };
+
+  //   timespentApi.addTimeSpent("ECE406", newTimeSpent);
+  // };
+
+  const addDeliverable = () => {
+    const newDeliverable = {
+      completed: true,
+      deliverable_id: "ECE406",
+      deliverable_name: "Lab 4",
+      due_at: new Date(),
+      grade: 14,
+      weight: 60,
     };
 
-    timespentApi.addTimeSpent("ECE_250", newTimeSpent);
+    console.log("Hey");
+    deliverableApi.addDeliverable("ECE406", newDeliverable);
   };
 
   function objectToArray(obj) {
@@ -55,17 +79,6 @@ function ListingsScreen({ navigation }) {
     return res;
   }
 
-  function getFirstPropName(obj) {
-    const fisrtPropName = Object.keys(obj)[0];
-    return fisrtPropName;
-  }
-
-  const newCourse = {
-    courseName: "barry",
-    courseNumber: "123",
-    difficulty: "1",
-    grade: "12",
-  };
   return (
     <Screen style={styles.screen}>
       {getCoursesApi.error && (
@@ -87,7 +100,7 @@ function ListingsScreen({ navigation }) {
           />
         )}
       />
-      <Button title="show data" onPress={() => addTimeSpent()} />
+      <Button title="show data" onPress={() => addDeliverable()} />
       <Button
         title="View Schedule"
         onPress={() => navigation.navigate(routes.SCHEDULE_PARAM)}

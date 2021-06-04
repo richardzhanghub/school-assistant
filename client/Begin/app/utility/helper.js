@@ -38,6 +38,16 @@ const helpers = {
     // console.log("cleaned data", data);
     return data;
   },
+  cleanNewCourseDate: function (newCourse) {
+    const result = {
+      course_id: newCourse.courseNumber,
+      course_name: newCourse.courseName,
+      desired_grade: parseInt(newCourse.grade, 10),
+      expected_difficulty: parseInt(newCourse.difficulty, 10),
+    };
+
+    return result;
+  },
   addCourse: function (deserializedUserInfo, newCourse) {
     deserializedUserInfo.courses.push({
       course_id: newCourse.courseNumber,

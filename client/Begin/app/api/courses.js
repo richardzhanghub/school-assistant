@@ -1,31 +1,18 @@
 import helper from "../utility/helper";
 import client from "./client";
-
 const endpoint = "/user";
-
+const addCourseEndpoint = "/course";
 const getCourses = () => {
   //   console.log("hey");
   return client.get(endpoint);
 };
 
 const addCourse = (newCourse) => {
-  getCourses().then((courses) => {
-    console.log("newCourse", newCourse);
+  console.log("newCourse", newCourse);
+  const data = helper.cleanNewCourseDate(newCourse);
+  console.log("newCourse - clean", data);
 
-    // Parse data to JS structure
-    const deserializedUserInfo = helper.deserializeGetUserResponse(
-      courses.data
-    );
-    // console.log("Hey", deserializedUserInfo);
-    const newData = helper.addCourse(deserializedUserInfo, newCourse);
-
-    // Serialize data to match BE endpoint
-    const serializedUserInfo = helper.serializePutUserRequestData(newData);
-
-    console.log("FINAL", serializedUserInfo);
-
-    return client.put(endpoint, serializedUserInfo);
-  });
+  return client.post(addCourseEndpoint, data);
 };
 
 const addDeliverable = () => {};

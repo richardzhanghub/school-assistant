@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, ScrollView } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import coursesApi from "../../api/courses";
 import useApi from "../../hooks/useApi";
-import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+import RadioForm from 'react-native-simple-radio-button';
 
 import {
   Form,
@@ -31,6 +31,11 @@ const deliverableValidationSchema = Yup.object().shape({
   weight: Yup.number().required().min(1).max(100).label("Difficulty")
 });
 
+const timeSpentValidationSchema = Yup.object().shape({
+  courseNumber: Yup.string().required().min(1).label("Course name"),
+  dueAt: Yup.date().required()
+});
+
 const departments = [
   {
     backgroundColor: "#a55eea",
@@ -49,7 +54,7 @@ const departments = [
 function ListingEdit({handleSubmit, form}) {
   const [startTime, setStartTime] = useState(new Date(1598051730000));
   const [endTime, setEndTime] = useState(new Date());
-  const addCoursesApi = useApi(coursesApi.addCourse);
+
 
   const [completed, setCompleted] = useState(false)
   const [deliverableDueAt, setDeliverableDueAt] = useState(new Date(1598051730000));
@@ -61,6 +66,7 @@ function ListingEdit({handleSubmit, form}) {
         <ScrollView>
           <Form
             initialValues={{
+              courseNumber: "",
               note: "",
             }}
             onSubmit={handleSubmit}
@@ -69,7 +75,15 @@ function ListingEdit({handleSubmit, form}) {
               justifyContent: "center",
               alignItems: "center"
             }}
+            validationSchema={timeSpentValidationSchema}
           > 
+            <FormField
+              maxLength={255}
+              multiline
+              name="courseNumber"
+              numberOfLines={3}
+              placeholder="Course Code"
+            />
             <DateTimePicker
               display="inline"
               style={{height:120, width: "60%"}}
@@ -102,17 +116,13 @@ function ListingEdit({handleSubmit, form}) {
 
   const courseForm = ( () => {
     function courseSubmit(course, { resetForm }) {
-      setProgress(0);
-      setUploadVisible(true);
-      const result = addCoursesApi.request(
-        course,
-        (progress) => setProgress(progress)
-      );
-
-      if (!result.ok) {
-        setUploadVisible(false);
-        return alert("Could not save the course");
+      const newCourse = {
+        courseName: course.courseName,
+        courseNumber: course.department.label + course.courseNumber,
+        difficulty: course.difficulty,
+        grade: course.grade,
       }
+      const response = coursesApi.addCourse(newCourse);
       resetForm();
     };
 
