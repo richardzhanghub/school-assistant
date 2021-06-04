@@ -17,7 +17,6 @@ def main():
         42, 47, 52, 32, 26, 48, 55, 6, 29, 84, 2, 4, 18, 56, 7, 29, 93, 44, 71,
         3, 86, 66, 31, 65, 0, 79, 20, 65, 52, 13
     ]]
-    print('Num items =', len(values))
     capacities = [850]
 
     solver.Init(values, weights, capacities)
@@ -33,7 +32,6 @@ def main():
             packed_weights.append(weights[0][i])
             total_weight += weights[0][i]
     print('Total weight:', total_weight)
-    print('Num packed items:', len(packed_items))
     print('Packed items:', packed_items)
     print('Packed_weights:', packed_weights)
 

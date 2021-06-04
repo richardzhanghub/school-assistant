@@ -103,73 +103,6 @@ paths:
                 $ref: '#/components/schemas/ScheduleInfo'
         '401':
           $ref: '#/components/responses/AuthorizationError'
-  /course:
-    post:
-      summary: Create a new course for the user
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CourseInfo'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CourseInfo'
-        '401':
-          $ref: '#/components/responses/AuthorizationError'
-  /course/{courseId}/deliverable:
-    post:
-      summary: Create a new deliverable for the user's course
-      parameters:
-        - name: courseId
-          in: path
-          description: Course ID
-          required: true
-          schema:
-            type: string
-            pattern: "[a-z0-9]+"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeliverableInfo'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeliverableInfo'
-        '401':
-          $ref: '#/components/responses/AuthorizationError'
-  /course/{courseId}/timespent:
-    post:
-      summary: Create a new time spent for the user's course
-      parameters:
-        - name: courseId
-          in: path
-          description: Course ID
-          required: true
-          schema:
-            type: string
-            pattern: "[a-z0-9]+"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TimeSpentInfo'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TimeSpentInfo'
-        '401':
-          $ref: '#/components/responses/AuthorizationError'
   /cat:
     post:
       summary: Create a new cat for the user
@@ -270,7 +203,6 @@ components:
         course_id:
           type: string
           minLength: 1
-          pattern: "[a-z0-9]+"
         course_name:
           type: string
           minLength: 1
@@ -304,11 +236,13 @@ components:
           type: string
           minLength: 1
         grade:
-          type: number
+          type: integer
+          format: int32
           minimum: 0
           maximum: 100
         weight:
-          type: number
+          type: integer
+          format: int32
           minimum: 0
           maximum: 100     
         due_at:
@@ -318,6 +252,7 @@ components:
           type: boolean
       required:
         - 'deliverable_name'
+        - 'grade'
         - 'weight'   
         - 'due_at'
         - 'completed'
@@ -408,7 +343,7 @@ components:
         time_allocations:
           type: object
           additionalProperties:
-            type: number
+            type: float
       required:
         - 'name'
         - 'starts_at'

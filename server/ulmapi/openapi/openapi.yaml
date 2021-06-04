@@ -106,83 +106,6 @@ paths:
       tags:
       - example
       x-openapi-router-controller: ulmapi.controllers.impl.example_controller
-  /course:
-    post:
-      operationId: course_post
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CourseInfo'
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CourseInfo'
-          description: Created
-        "401":
-          description: Credentials are missing or invalid
-      summary: Create a new course for the user
-      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
-  /course/{courseId}/deliverable:
-    post:
-      operationId: course_course_id_deliverable_post
-      parameters:
-      - description: Course ID
-        explode: false
-        in: path
-        name: courseId
-        required: true
-        schema:
-          pattern: '[a-z0-9]+'
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeliverableInfo'
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeliverableInfo'
-          description: Created
-        "401":
-          description: Credentials are missing or invalid
-      summary: Create a new deliverable for the user's course
-      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
-  /course/{courseId}/timespent:
-    post:
-      operationId: course_course_id_timespent_post
-      parameters:
-      - description: Course ID
-        explode: false
-        in: path
-        name: courseId
-        required: true
-        schema:
-          pattern: '[a-z0-9]+'
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TimeSpentInfo'
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TimeSpentInfo'
-          description: Created
-        "401":
-          description: Credentials are missing or invalid
-      summary: Create a new time spent for the user's course
-      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
   /login:
     post:
       operationId: login_post
@@ -304,8 +227,8 @@ components:
         course_name: course_name
         deliverables:
           key:
-            grade: 14.658129805029452
-            weight: 59.621339166831824
+            grade: 14
+            weight: 59
             due_at: 2000-01-23T04:56:07.000+00:00
             completed: true
             deliverable_name: deliverable_name
@@ -320,7 +243,6 @@ components:
       properties:
         course_id:
           minLength: 1
-          pattern: '[a-z0-9]+'
           type: string
         course_name:
           minLength: 1
@@ -351,8 +273,8 @@ components:
       type: object
     DeliverableInfo:
       example:
-        grade: 14.658129805029452
-        weight: 59.621339166831824
+        grade: 14
+        weight: 59
         due_at: 2000-01-23T04:56:07.000+00:00
         completed: true
         deliverable_name: deliverable_name
@@ -361,13 +283,15 @@ components:
           minLength: 1
           type: string
         grade:
+          format: int32
           maximum: 100
           minimum: 0
-          type: number
+          type: integer
         weight:
+          format: int32
           maximum: 100
           minimum: 0
-          type: number
+          type: integer
         due_at:
           format: date-time
           type: string
@@ -377,6 +301,7 @@ components:
       - completed
       - deliverable_name
       - due_at
+      - grade
       - weight
       type: object
     TimeSpentInfo:
@@ -409,8 +334,8 @@ components:
             course_name: course_name
             deliverables:
               key:
-                grade: 14.658129805029452
-                weight: 59.621339166831824
+                grade: 14
+                weight: 59
                 due_at: 2000-01-23T04:56:07.000+00:00
                 completed: true
                 deliverable_name: deliverable_name
@@ -490,7 +415,7 @@ components:
         max_study_hours: 1
         name: name
         time_allocations:
-          key: 6.027456183070403
+          key: ""
         ends_at: 2000-01-23
       properties:
         name:
@@ -508,7 +433,7 @@ components:
           type: integer
         time_allocations:
           additionalProperties:
-            type: number
+            type: float
           type: object
       required:
       - ends_at

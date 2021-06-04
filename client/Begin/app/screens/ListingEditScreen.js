@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
+import {StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import * as Yup from "yup";
+import listingsApi from "../api/listings";
+import CategoryPickerItem from "../components/CategoryPickerItem";
+import ListEdit from "../components/forms/ListEdit"
+import Button from "../components/Button";
+import colors from "../config/colors";
 
 import {
   Form,
@@ -8,12 +13,8 @@ import {
   FormPicker as Picker,
   SubmitButton,
 } from "../components/forms";
-import CategoryPickerItem from "../components/CategoryPickerItem";
 import Screen from "../components/Screen";
-import FormImagePicker from "../components/forms/FormImagePicker";
-import listingsApi from "../api/listings";
 import useLocation from "../hooks/useLocation";
-import UploadScreen from "./UploadScreen";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
@@ -80,71 +81,35 @@ const categories = [
   },
 ];
 
-function ListingEditScreen() {
+const ListingEditScreen = () => {
+  const [selectedType, setSelectedType] = useState('timeSpent');
   const location = useLocation();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const handleSubmit = async (listing, { resetForm }) => {
-    setProgress(0);
-    setUploadVisible(true);
-    const result = await listingsApi.addListing(
-      { ...listing, location },
-      (progress) => setProgress(progress)
-    );
-
-    if (!result.ok) {
-      setUploadVisible(false);
-      return alert("Could not save the listing");
-    }
-
-    resetForm();
-  };
-
   return (
     <Screen style={styles.container}>
-      <UploadScreen
-        onDone={() => setUploadVisible(false)}
-        progress={progress}
-        visible={uploadVisible}
-      />
-      <Form
-        initialValues={{
-          title: "",
-          price: "",
-          description: "",
-          category: null,
-          images: [],
-        }}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-      >
-        <FormImagePicker name="images" />
-        <FormField maxLength={255} name="title" placeholder="Title" />
-        <FormField
-          keyboardType="numeric"
-          maxLength={8}
-          name="price"
-          placeholder="Price"
-          width={120}
-        />
-        <Picker
-          items={categories}
-          name="category"
-          numberOfColumns={3}
-          PickerItemComponent={CategoryPickerItem}
-          placeholder="Category"
-          width="50%"
-        />
-        <FormField
-          maxLength={255}
-          multiline
-          name="description"
-          numberOfLines={3}
-          placeholder="Description"
-        />
-        <SubmitButton title="Post" />
-      </Form>
+      <View style={{flexDirection:"row"}}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setSelectedType('timeSpent')}
+        >
+          <Text style={styles.text}>Time Spent</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setSelectedType('course')}
+        >
+          <Text style={styles.text}>Course</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setSelectedType('deliverable')}
+        >
+          <Text style={styles.text}>Deliverable</Text>
+        </TouchableOpacity>
+      </View>
+      { selectedType && <ListEdit form={selectedType}/> }
     </Screen>
   );
 }
@@ -152,6 +117,20 @@ function ListingEditScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+  },
+  button: {
+    backgroundColor: colors.primary,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 15,
+    margin: 2,
+    width:"32%"
+  },
+  text: {
+    color: colors.white,
+    fontSize: 12,
+    fontWeight: "bold",
   },
 });
 export default ListingEditScreen;

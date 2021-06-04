@@ -3,7 +3,7 @@ import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
 import colors from "../config/colors";
 import Text from "./Text";
 
-function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl }) {
+function CourseCard({ title, subTitle, onPress }) {
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.card}>
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Card;
+export default CourseCard;

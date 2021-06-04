@@ -1,10 +1,9 @@
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React from "react";
+import ListingEditScreen from "../screens/ListingEditScreen";
 import AccountNavigator from "./AccountNavigator";
 import FeedNavigator from "./FeedNavigator";
-import ListingEditScreen from "../screens/ListingEditScreen";
 import NewListingButton from "./NewListingButton";
 import routes from "./routes";
 
@@ -13,7 +12,7 @@ const Tab = createBottomTabNavigator();
 const AppNavigator = () => (
   <Tab.Navigator>
     <Tab.Screen
-      name="Feed"
+      name="Courses"
       component={FeedNavigator}
       options={{
         tabBarIcon: ({ color, size }) => (

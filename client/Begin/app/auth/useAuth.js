@@ -12,6 +12,7 @@ export default useAuth = () => {
   };
 
   const login = (authToken) => {
+    console.log("login is called and authToken is: ", authToken);
     const user = jwtDecoder(authToken);
 
     // Upon successful calling Login BE API, set User globally

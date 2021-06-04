@@ -31,11 +31,7 @@ function AccountScreen({ navigation }) {
   return (
     <Screen style={styles.screen}>
       <View style={styles.container}>
-        <ListItem
-          title={user.sub}
-          subTitle={user.sub}
-          image={require("../assets/mosh.jpg")}
-        />
+        <ListItem title={user.sub} subTitle={user.sub} />
       </View>
       <View style={styles.container}>
         <FlatList
