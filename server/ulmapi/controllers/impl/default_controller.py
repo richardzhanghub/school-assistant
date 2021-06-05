@@ -142,6 +142,12 @@ def course_course_id_put(course_id, user):  # noqa: E501
         return 'Course {} does not exist for user {}'.format(course_id, user), 400
 
     course_db = course_info_to_db(course_info)
+    # If client did not specify a deliverables dictionary, don't change the existing one
+    if course_info.deliverables is None:
+        course_db.deliverables = user_db.courses[course_id].deliverables
+    if course_info.time_spent is None:
+        course_db.time_spent = user_db.courses[course_id].time_spent
+
     user_db.courses[course_id] = course_db
     user_db.save()
     return course_info_from_db(user_db.courses[course_id])

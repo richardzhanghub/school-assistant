@@ -65,7 +65,6 @@ function ListingsScreen({ navigation }) {
       weight: 60,
     };
 
-    console.log("Hey");
     deliverableApi.addDeliverable("ECE406", newDeliverable);
   };
 

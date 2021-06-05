@@ -3,6 +3,8 @@ from ulmapi.dto.course_info import CourseInfo
 from ulmapi.dto.deliverable_info import DeliverableInfo
 from ulmapi.dto.time_spent_info import TimeSpentInfo
 from ulmapi.dto.user_info import UserInfo
+from ulmapi.dto.user_info_current_schedule import UserInfoCurrentSchedule
+import datetime
 
 
 def schedule_info_to_db(schedule_info):
@@ -50,6 +52,23 @@ def courses_from_user(user):
         courses[course_key] = course_info_from_db(course_db)
     return courses  
 
+def current_schedule_from_user(user):
+    time_allocations = {}
+    for (course_id, time_allocation_db) in user.current_schedule.time_allocations:
+        time_allocations[course_id] = time_allocation_db
+    return UserInfoCurrentSchedule(started_at=user.current_schedule.started_at, ended_at=user.current_schedule.ended_at, time_allocations=time_allocations)
+
+def time_recorded_from_courses(courses, current_schedule):
+    current_schedule_start = current_schedule.started_at
+    current_schedule_end = current_schedule.ended_at
+    time_recorded = {}
+    for (course_key, course) in courses:
+        for time_spent in course.time_spent:
+            if time_spent.started_at >= current_schedule_start and time_spent.ended_at <= current_schedule_end:
+                time_delta = time_spent.ended_at - time_spent.started_at
+                hours = time_delta.total_seconds() / 3600
+                time_recorded[course_key] = time_recorded.get(course_key, 0) + hours
+    return time_recorded
 
 def course_info_from_db(course_db):
     deliverables = deliverables_from_course(course_db)
@@ -62,8 +81,10 @@ def course_info_from_db(course_db):
 
 
 def user_info_from_db(user):
+    current_schedule = current_schedule_from_user(user)
     courses = courses_from_user(user)
-    return UserInfo(username=user.username, email=user.email, joined_at=user.joined_at, courses=courses)
+    time_recorded = time_recorded_from_courses(courses, current_schedule)
+    return UserInfo(current_schedule=current_schedule, time_recorded=time_recorded, username=user.username, email=user.email, joined_at=user.joined_at, courses=courses)
 
 
 def user_info_to_db(user_db, user_info):

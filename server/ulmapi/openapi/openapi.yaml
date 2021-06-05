@@ -10,102 +10,6 @@ servers:
 security:
 - bearerAuth: []
 paths:
-  /cat:
-    get:
-      operationId: cat_get
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/Cat'
-                type: array
-          description: OK
-        "401":
-          description: Credentials are missing or invalid
-      summary: Get all cats for the user
-      tags:
-      - example
-      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
-    post:
-      operationId: cat_post
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cat'
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cat'
-          description: Created
-        "401":
-          description: Credentials are missing or invalid
-      summary: Create a new cat for the user
-      tags:
-      - example
-      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
-  /cat/{catId}:
-    get:
-      operationId: cat_cat_id_get
-      parameters:
-      - description: Cat ID
-        explode: false
-        in: path
-        name: catId
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cat'
-          description: OK
-        "401":
-          description: Credentials are missing or invalid
-        "404":
-          description: Entity could not be found
-      summary: Get cat by id for the user
-      tags:
-      - example
-      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
-    put:
-      operationId: cat_cat_id_put
-      parameters:
-      - description: Cat ID
-        explode: false
-        in: path
-        name: catId
-        required: true
-        schema:
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cat'
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cat'
-          description: OK
-        "401":
-          description: Credentials are missing or invalid
-        "404":
-          description: Entity could not be found
-      summary: Replace a cat for the user
-      tags:
-      - example
-      x-openapi-router-controller: ulmapi.controllers.impl.example_controller
   /course:
     post:
       operationId: course_post
@@ -473,9 +377,22 @@ components:
             - notes: notes
               started_at: 2000-01-23T04:56:07.000+00:00
               ended_at: 2000-01-23T04:56:07.000+00:00
+        time_recorded:
+          key: 6.027456183070403
+        current_schedule:
+          starts_at: 2000-01-23
+          time_allocations:
+            key: 0.8008281904610115
+          ends_at: 2000-01-23
         email: email
         username: username
       properties:
+        current_schedule:
+          $ref: '#/components/schemas/UserInfo_current_schedule'
+        time_recorded:
+          additionalProperties:
+            type: number
+          type: object
         username:
           minLength: 1
           type: string
@@ -562,28 +479,23 @@ components:
       - max_study_hours
       - starts_at
       type: object
-    Cat:
+    UserInfo_current_schedule:
       example:
-        birth_date: 2000-01-23T04:56:07.000+00:00
-        cat_id: cat_id
-        name: name
-        weight: 8
+        starts_at: 2000-01-23
+        time_allocations:
+          key: 0.8008281904610115
+        ends_at: 2000-01-23
       properties:
-        cat_id:
+        starts_at:
+          format: date
           type: string
-        name:
+        ends_at:
+          format: date
           type: string
-        weight:
-          maximum: 100
-          minimum: 0
-          type: integer
-        birth_date:
-          format: date-time
-          type: string
-      required:
-      - birth_date
-      - name
-      - weight
+        time_allocations:
+          additionalProperties:
+            type: number
+          type: object
       type: object
   securitySchemes:
     bearerAuth:

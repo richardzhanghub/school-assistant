@@ -228,90 +228,6 @@ paths:
                 $ref: '#/components/schemas/TimeSpentInfo'
         '401':
           $ref: '#/components/responses/AuthorizationError'
-  /cat:
-    post:
-      summary: Create a new cat for the user
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cat'
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cat'
-        '401':
-          $ref: '#/components/responses/AuthorizationError'
-      tags:
-        - example
-    get:
-      summary: Get all cats for the user
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Cat'
-        '401':
-          $ref: '#/components/responses/AuthorizationError'
-      tags:
-        - example
-  /cat/{catId}:
-    get:
-      summary: Get cat by id for the user
-      parameters:
-        - name: catId
-          in: path
-          description: Cat ID
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cat'
-        '401':
-          $ref: '#/components/responses/AuthorizationError'
-        '404':
-          $ref: '#/components/responses/NotFoundError'
-      tags:
-        - example
-    put:
-      summary: Replace a cat for the user
-      parameters:
-        - name: catId
-          in: path
-          description: Cat ID
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Cat'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Cat'
-        '401':
-          $ref: '#/components/responses/AuthorizationError'
-        '404':
-          $ref: '#/components/responses/NotFoundError'
-      tags:
-        - example
 components:
   responses:
     AuthorizationError:
@@ -402,6 +318,23 @@ components:
     UserInfo:
       type: object
       properties:
+        current_schedule:
+          type: object
+          properties:
+            starts_at:
+              format: date
+              type: string
+            ends_at:
+              format: date
+              type: string
+            time_allocations:
+              additionalProperties:
+                type: number
+              type: object
+        time_recorded:
+          additionalProperties:
+            type: number
+          type: object
         username:
           type: string
           minLength: 1
@@ -472,25 +405,6 @@ components:
         - 'starts_at'
         - 'ends_at'
         - 'max_study_hours'
-    Cat:
-      type: object
-      properties:
-        # Auto-generated on creation
-        cat_id:
-          type: string
-        name:
-          type: string
-        weight:
-          type: integer
-          minimum: 0
-          maximum: 100
-        birth_date:
-          type: string
-          format: date-time
-      required:
-        - 'name'
-        - 'weight'
-        - 'birth_date'
   securitySchemes:
     # Example configuration for bearer token authentication
     bearerAuth:
