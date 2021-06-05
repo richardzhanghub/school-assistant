@@ -1,24 +1,22 @@
-import React, { useState, useRef } from "react";
-import CategoryPickerItem from "../CategoryPickerItem";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import coursesApi from "../../api/courses";
-import useApi from "../../hooks/useApi";
-import RadioForm from 'react-native-simple-radio-button';
-
-import {
-  Form,
-  FormField,
-  FormPicker as Picker,
-  SubmitButton,
-} from "./";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import React, { useState } from "react";
+import { ScrollView, Text, View } from "react-native";
+import RadioForm from "react-native-simple-radio-button";
 import * as Yup from "yup";
+import coursesApi from "../../api/courses";
+import deliverableApi from "../../api/deliverable";
+import timespentApi from "../../api/timespent";
 import colors from "../../config/colors";
-import { set } from "react-native-reanimated";
+import CategoryPickerItem from "../CategoryPickerItem";
+import { Form, FormField, FormPicker as Picker, SubmitButton } from "./";
 
 const courseValidationSchema = Yup.object().shape({
   courseName: Yup.string().required().min(1).label("Course name"),
-  courseNumber: Yup.number().required().min(1).max(10000).label("Course number"),
+  courseNumber: Yup.number()
+    .required()
+    .min(1)
+    .max(10000)
+    .label("Course number"),
   grade: Yup.number().required().min(1).max(100).label("Grade"),
   difficulty: Yup.number().required().min(1).max(5).label("Difficulty"),
 });
@@ -28,12 +26,12 @@ const deliverableValidationSchema = Yup.object().shape({
   courseName: Yup.string().required().min(1).label("Course name"),
   dueAt: Yup.date().required(),
   grade: Yup.number().min(1).max(100).label("Grade"),
-  weight: Yup.number().required().min(1).max(100).label("Difficulty")
+  weight: Yup.number().required().min(1).max(100).label("Difficulty"),
 });
 
 const timeSpentValidationSchema = Yup.object().shape({
   courseNumber: Yup.string().required().min(1).label("Course name"),
-  dueAt: Yup.date().required()
+  note: Yup.string().required(),
 });
 
 const departments = [
@@ -51,32 +49,46 @@ const departments = [
   },
 ];
 
-function ListingEdit({handleSubmit, form}) {
+function ListingEdit({ form }) {
   const [startTime, setStartTime] = useState(new Date(1598051730000));
   const [endTime, setEndTime] = useState(new Date());
 
+  const [completed, setCompleted] = useState(false);
+  const [deliverableDueAt, setDeliverableDueAt] = useState(
+    new Date(1598051730000)
+  );
 
-  const [completed, setCompleted] = useState(false)
-  const [deliverableDueAt, setDeliverableDueAt] = useState(new Date(1598051730000));
+  const timeSpentForm = () => {
+    function timeSpentSubmit(timeSpent, { resetForm }) {
+      console.log("Time Spent Form Submitted");
+      const newTimeSpent = {
+        ended_at: endTime,
+        notes: timeSpent.note,
+        started_at: startTime,
+      };
+      const response = timespentApi.addTimeSpent(
+        timeSpent.courseNumber,
+        newTimeSpent
+      );
+      resetForm();
+    }
 
-  const timeSpentForm = ( (handleSubmit) =>{
-  
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <ScrollView>
           <Form
             initialValues={{
               courseNumber: "",
               note: "",
             }}
-            onSubmit={handleSubmit}
+            onSubmit={timeSpentSubmit}
             style={{
               display: "flex",
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
             }}
-            validationSchema={timeSpentValidationSchema}
-          > 
+            // validationSchema={timeSpentValidationSchema}
+          >
             <FormField
               maxLength={255}
               multiline
@@ -86,20 +98,26 @@ function ListingEdit({handleSubmit, form}) {
             />
             <DateTimePicker
               display="inline"
-              style={{height:120, width: "60%"}}
+              style={{ height: 120, width: "60%" }}
               value={startTime}
               title="startTime"
               mode="datetime"
-              onChange={(event, selectedDate) => setStartTime(selectedDate)}/>
-            <Text style={{textAlign: "right", color: colors.primary}}>Start Time</Text>
+              onChange={(event, selectedDate) => setStartTime(selectedDate)}
+            />
+            <Text style={{ textAlign: "right", color: colors.primary }}>
+              Start Time
+            </Text>
             <DateTimePicker
-                  display="inline"
-                  style={{height:120, width: "60%"}}
-                  value={endTime}
-                  title="endTime" 
-                  mode="datetime"
-                  onChange={(event, selectedDate) => setEndTime(selectedDate)}/>
-            <Text style={{textAlign: "right", color: colors.primary}}>End Time</Text>
+              display="inline"
+              style={{ height: 120, width: "60%" }}
+              value={endTime}
+              title="endTime"
+              mode="datetime"
+              onChange={(event, selectedDate) => setEndTime(selectedDate)}
+            />
+            <Text style={{ textAlign: "right", color: colors.primary }}>
+              End Time
+            </Text>
             <FormField
               maxLength={255}
               multiline
@@ -107,27 +125,27 @@ function ListingEdit({handleSubmit, form}) {
               numberOfLines={3}
               placeholder="Note"
             />
-            <SubmitButton title="Save"/>
+            <SubmitButton title="Add time Spent" />
           </Form>
         </ScrollView>
       </View>
-    )
-  })
+    );
+  };
 
-  const courseForm = ( () => {
+  const courseForm = () => {
     function courseSubmit(course, { resetForm }) {
       const newCourse = {
         courseName: course.courseName,
         courseNumber: course.department.label + course.courseNumber,
         difficulty: course.difficulty,
         grade: course.grade,
-      }
+      };
       const response = coursesApi.addCourse(newCourse);
       resetForm();
-    };
+    }
 
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <ScrollView>
           <Form
             initialValues={{
@@ -135,12 +153,16 @@ function ListingEdit({handleSubmit, form}) {
               courseNumber: "",
               grade: "",
               department: null,
-              difficulty: ""
+              difficulty: "",
             }}
             onSubmit={courseSubmit}
-            validationSchema={courseValidationSchema}
+            // validationSchema={courseValidationSchema}
           >
-            <FormField maxLength={255} name="courseName" placeholder="Course Name" />
+            <FormField
+              maxLength={255}
+              name="courseName"
+              placeholder="Course Name"
+            />
             <FormField
               keyboardType="numeric"
               maxLength={8}
@@ -170,36 +192,61 @@ function ListingEdit({handleSubmit, form}) {
               placeholder="Expected Difficulty (1-5)"
               width={250}
             />
-            <SubmitButton title="Create" />
+            <SubmitButton title="Create Course" />
           </Form>
         </ScrollView>
       </View>
-    )
-  })
+    );
+  };
 
-  const deliverableForm = ( (handleSubmit) => {
+  const deliverableForm = () => {
     var radio_props = [
-      {label: 'Yes', value: completed },
-      {label: 'No', value: !completed }
+      { label: "Yes", value: completed },
+      { label: "No", value: !completed },
     ];
 
+    function deliverableSubmit(deliverable, { resetForm }) {
+      const newDeliverable = {
+        completed: completed,
+        deliverable_name: deliverable.deliverableName,
+        due_at: deliverableDueAt,
+        grade: deliverable.grade ? parseInt(deliverable.grade) : deliverable.grade,
+        weight: parseInt(deliverable.weight),
+      };
+      const response = deliverableApi.addDeliverable(deliverable.courseName, newDeliverable);
+      resetForm();
+    }
+
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <ScrollView>
-            <Form
+          <Form
             initialValues={{
               deliverableName: "",
               completed: completed,
               courseName: "",
               dueAt: "",
               grade: "",
-              weight: ""
+              weight: "",
             }}
-            onSubmit={handleSubmit}
-            validationSchema={deliverableValidationSchema}
+            onSubmit={deliverableSubmit}
+            // validationSchema={deliverableValidationSchema}
           >
-            <FormField maxLength={255} name="deliverableName" placeholder="Deliverable Name" />
-            <Text style={{textAlign: "left", fontSize: 18, color: colors.primary, marginVertical:10}}>Completed</Text>
+            <FormField
+              maxLength={255}
+              name="deliverableName"
+              placeholder="Deliverable Name"
+            />
+            <Text
+              style={{
+                textAlign: "left",
+                fontSize: 18,
+                color: colors.primary,
+                marginVertical: 10,
+              }}
+            >
+              Completed
+            </Text>
             <RadioForm
               radio_props={radio_props}
               initial={completed}
@@ -208,13 +255,24 @@ function ListingEdit({handleSubmit, form}) {
               labelColor={colors.primary}
               labelHorizontal={true}
             />
-            <FormField maxLength={255} name="courseName" placeholder="Course Name" />
-            <Text style={{textAlign: "left", fontSize: 18, color: colors.primary}}>Due At</Text>
+            <FormField
+              maxLength={255}
+              name="courseName"
+              placeholder="Course Name"
+            />
+            <Text
+              style={{ textAlign: "left", fontSize: 18, color: colors.primary }}
+            >
+              Due At
+            </Text>
             <DateTimePicker
               value={deliverableDueAt}
-              title="dueAt" 
+              title="dueAt"
               mode="datetime"
-              onChange={(event, selectedDate) => setDeliverableDueAt(selectedDate)}/>
+              onChange={(event, selectedDate) =>
+                setDeliverableDueAt(selectedDate)
+              }
+            />
             <FormField
               keyboardType="numeric"
               maxLength={3}
@@ -229,18 +287,18 @@ function ListingEdit({handleSubmit, form}) {
               placeholder="Weight Percentage"
               width={200}
             />
-            <SubmitButton title="Create" />
+            <SubmitButton title="Create deliverable" />
           </Form>
         </ScrollView>
       </View>
-    )
-  })
-  
-  return (
-    form == "course" ? courseForm(handleSubmit) : form == "deliverable" ? 
-      deliverableForm(handleSubmit) : timeSpentForm(handleSubmit)
-  )
+    );
+  };
+
+  return form == "course"
+    ? courseForm()
+    : form == "deliverable"
+    ? deliverableForm()
+    : timeSpentForm();
 }
 
 export default ListingEdit;
- 

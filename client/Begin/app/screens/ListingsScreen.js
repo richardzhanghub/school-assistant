@@ -3,13 +3,13 @@ import { Button, FlatList, StyleSheet } from "react-native";
 import coursesApi from "../api/courses";
 import deliverableApi from "../api/deliverable";
 import ActivityIndicator from "../components/ActivityIndicator";
+import AppButton from "../components/Button";
 import Card from "../components/Card";
 import Screen from "../components/Screen";
 import AppText from "../components/Text";
 import colors from "../config/colors";
 import useApi from "../hooks/useApi";
 import routes from "../navigation/routes";
-
 function ListingsScreen({ navigation }) {
   // not calling the function but just passing the reference
   // the actual api call is in useApi
@@ -100,9 +100,14 @@ function ListingsScreen({ navigation }) {
         )}
       />
       <Button title="show data" onPress={() => addDeliverable()} />
-      <Button
-        title="View Schedule"
+      <AppButton
+        title="New Schedule"
         onPress={() => navigation.navigate(routes.SCHEDULE_PARAM)}
+      />
+
+      <AppButton
+        title="View Progress"
+        onPress={() => navigation.navigate(routes.PROGRESS_DETAILS)}
       />
     </Screen>
     // <Screen>

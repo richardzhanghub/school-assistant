@@ -29,6 +29,34 @@ const addTimeSpent = (course_id, newTimeSpent) => {
   client.post(endpoint, data);
 };
 
+const getTimeSpent = (courseId) => {
+  getCourses().then((courses) => {
+    const deserializedUserInfo = helper.deserializeGetUserResponse(
+      courses.data
+    );
+    var course = deserializedUserInfo.courses.filter(course => {
+      return course.course_id == courseId;
+    });
+    return course[0].time_spent;
+  });
+};
+
+
+const getCourseTotalTimeSpent = (courseId) => {
+  getTimeSpent(courseId).then((timeSpents) => {
+    var totalDiff = moment()
+    timeSpents.forEach( (timeSpent) => {
+      const start = moment(timeSpent.started_at)
+      const end = moment(timeSpent.ended_at)
+      totalDiff.add(moment.duration(end.diff(start)))
+    })
+    console.log("hello",totalDiff.asHours())
+    return totalDiff.asHours()
+  });
+}
+
 export default {
   addTimeSpent,
+  getTimeSpent,
+  getCourseTotalTimeSpent
 };

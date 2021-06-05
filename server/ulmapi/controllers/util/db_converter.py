@@ -54,15 +54,15 @@ def courses_from_user(user):
 
 def current_schedule_from_user(user):
     time_allocations = {}
-    for (course_id, time_allocation_db) in user.current_schedule.time_allocations:
+    for (course_id, time_allocation_db) in user.current_schedule.time_allocations.items():
         time_allocations[course_id] = time_allocation_db
-    return UserInfoCurrentSchedule(started_at=user.current_schedule.started_at, ended_at=user.current_schedule.ended_at, time_allocations=time_allocations)
+    return UserInfoCurrentSchedule(starts_at=user.current_schedule.starts_at, ends_at=user.current_schedule.ends_at, time_allocations=time_allocations)
 
 def time_recorded_from_courses(courses, current_schedule):
-    current_schedule_start = current_schedule.started_at
-    current_schedule_end = current_schedule.ended_at
+    current_schedule_start = current_schedule.starts_at
+    current_schedule_end = current_schedule.ends_at
     time_recorded = {}
-    for (course_key, course) in courses:
+    for (course_key, course) in courses.items():
         for time_spent in course.time_spent:
             if time_spent.started_at >= current_schedule_start and time_spent.ended_at <= current_schedule_end:
                 time_delta = time_spent.ended_at - time_spent.started_at

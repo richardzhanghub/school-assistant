@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View, SafeAreaView } from "react-native";
 import CourseDetails from "../components/CourseDetails";
 import ListItem from "../components/lists/ListItem";
@@ -6,10 +6,15 @@ import Screen from "../components/Screen";
 import Text from "../components/Text";
 import colors from "../config/colors";
 import routes from "../navigation/routes";
+// import coursesApi from "../api/courses";
 
 function ListingDetailsScreen({ navigation, route }) {
   const listing = route.params;
 
+  // useEffect(() => {
+  //   coursesApi.getCourseTotalTimeSpent(listing.course_id)
+  // }, []);
+  
   return (
     <Screen style={styles.screen}>
       <SafeAreaView style={{flex: 1}}>
@@ -21,6 +26,11 @@ function ListingDetailsScreen({ navigation, route }) {
             subTitle="Recommendations"
             onPress={() => navigation.navigate(routes.DATA_ANALYSIS)}
           />
+          {/* <ListItem
+            title="Total Time Spent"
+            subTitle="hello"
+            onPress={() => navigation.navigate(routes.DATA_ANALYSIS)}
+          /> */}
           <CourseDetails courseData={listing} />
         </View>
       </SafeAreaView>
