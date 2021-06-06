@@ -1,7 +1,7 @@
 import helper from "../utility/helper";
 import client from "./client";
 const endpoint = "/user";
-const addCourseEndpoint = "/course";
+const courseEndpoint = "/course";
 const getCourses = () => {
   //   console.log("hey");
   return client.get(endpoint);
@@ -10,10 +10,17 @@ const getCourses = () => {
 const addCourse = (newCourse) => {
   const data = helper.cleanNewCourseDate(newCourse);
 
-  return client.post(addCourseEndpoint, data);
+  return client.post(courseEndpoint, data);
 };
+
+const editCourse = (changedCourse) => {
+  const data = helper.cleanEditCourseDate(changedCourse)
+  const endpoint = `/course/${data.course_id}`;
+  return client.put(endpoint, data)
+}
 
 export default {
   getCourses,
   addCourse,
+  editCourse
 };

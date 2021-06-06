@@ -38,6 +38,20 @@ const addDeliverable = (course_id, newDeliverable) => {
   client.post(endpoint, data);
 };
 
+const editDeliverable = (course_id, changedDeliverable) => {
+  const data = {
+    completed: changedDeliverable.completed,
+    deliverable_id: changedDeliverable.deliverable_id,
+    deliverable_name: changedDeliverable.deliverable_name,
+    due_at: util.convertDateToString(changedDeliverable.due_at),
+    grade: changedDeliverable.grade,
+    weight: changedDeliverable.weight,
+  }
+  const endpoint = `/course/${course_id}/deliverable/${data.deliverable_id}`;
+  return client.put(endpoint, data)
+}
+
 export default {
   addDeliverable,
+  editDeliverable
 };

@@ -1,50 +1,19 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState } from "react";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import { Button, StyleSheet, View } from "react-native";
 import { ScrollView, TouchableHighlight } from "react-native-gesture-handler";
-import scheduleApi from "../api/schedule";
 import AppButton from "../components/Button";
 import Screen from "../components/Screen";
 import AppText from "../components/Text";
 import colors from "../config/colors";
 import defaultStyles from "../config/styles";
 import routes from "../navigation/routes";
+
 export default function ScheduleParam({ navigation }) {
   const [startPickerShow, setStartPickerShow] = useState(false);
   const [endPickerShow, setEndPickerShow] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [maxHour, setMaxHour] = useState(0);
-
-  const handleSubmit = async ({ username, password }) => {
-    const result = await authAPI.login(username, password);
-
-    if (!result.ok) {
-      console.log("NOT OK");
-      return setLoginFailed(true);
-    }
-
-    setLoginFailed(false);
-    login(result.data.access_token);
-  };
-
-  const getSchedule = async () => {
-    const newSchedule = {
-      starts_at: startDate,
-      ends_at: endDate,
-      max_study_hours: maxHour,
-    };
-
-    console.log("client: newSchedule", newSchedule);
-    const result = await scheduleApi.getSchedule(newSchedule);
-    if (!result.ok) {
-      console.log("NOT OK");
-    } else {
-      console.log("Success!!");
-      const schedule_status = "new";
-      navigation.navigate(routes.PROGRESS_DETAILS, schedule_status);
-    }
-  };
 
   const showStartPicker = () => {
     setStartPickerShow(true);
@@ -74,11 +43,6 @@ export default function ScheduleParam({ navigation }) {
     const currentDate = selectedDate || endDate;
     console.log(endDate);
     setEndDate(currentDate);
-  };
-
-  const onMaxHourChange = (maxHour) => {
-    console.log("maxHour +++", maxHour);
-    setMaxHour(maxHour);
   };
 
   return (
@@ -126,26 +90,9 @@ export default function ScheduleParam({ navigation }) {
           </View>
         )}
         {endPickerShow && <Button title="Confirm" onPress={onEndDateConfirm} />}
-
-        <TextInput
-          onChangeText={(text) => setMaxHour(text)}
-          placeholder="Max Hour"
-          keyboardType="numeric"
-          style={{
-            fontSize: 14,
-            margin: 10,
-            borderBottomColor: "#ccc",
-            backgroundColor: defaultStyles.colors.light,
-            borderRadius: 25,
-            flexDirection: "row",
-            padding: 15,
-            marginVertical: 10,
-          }}
-        />
         <AppButton
-          title="Submit"
-          // onPress={() => navigation.navigate(routes.PROGRESS_DETAILS)}
-          onPress={getSchedule}
+          title="Get Schedule"
+          onPress={() => navigation.navigate(routes.PROGRESS_DETAILS)}
         />
       </ScrollView>
     </Screen>

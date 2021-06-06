@@ -14,6 +14,7 @@ function Card({ title, subTitle, imageUrl, onPress, thumbnailUrl }) {
           <Text style={styles.subTitle} numberOfLines={2}>
             {subTitle}
           </Text>
+          
         </View>
       </View>
     </TouchableWithoutFeedback>

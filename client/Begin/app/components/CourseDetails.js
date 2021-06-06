@@ -1,8 +1,10 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import Card from "../components/Card";
 import colors from "../config/colors";
+import routes from "../navigation/routes";
+
 const objectToArray = (obj) => {
   const res = [];
   for (const p in obj) {
@@ -12,7 +14,7 @@ const objectToArray = (obj) => {
   return res;
 };
 
-function CourseDetails({ courseData }) {
+function CourseDetails({ navigation, courseData }) {
   const {
     course_id,
     course_name,
@@ -33,6 +35,7 @@ function CourseDetails({ courseData }) {
   const deliverables = objectToArray(courseData.deliverables);
   return (
     <View style={styles.deliverablesContainer}>
+      <Text style={{padding: 20}}>Click to Edit Deliverable Information</Text>
       <FlatList
         data={deliverables}
         keyExtractor={(deliverable) => deliverable.deliverable_name.toString()}
@@ -40,7 +43,7 @@ function CourseDetails({ courseData }) {
           <Card
             title={item.deliverable_name}
             subTitle={item.due_at}
-            onPress={() => console.log("Hey")}
+            onPress={() => navigation.navigate(routes.LISTING_EDIT, {type: "deliverable", courseId: course_id, val: item})}
           />
         )}
       />

@@ -48,6 +48,15 @@ const helpers = {
 
     return result;
   },
+  cleanEditCourseDate: function (editedCourse) {
+    const result = {
+      course_id: editedCourse.courseNumber,
+      course_name: editedCourse.courseName,
+      desired_grade: parseInt(editedCourse.grade, 10),
+      expected_difficulty: parseInt(editedCourse.difficulty, 10),
+    };
+    return result;
+  },
   addCourse: function (deserializedUserInfo, newCourse) {
     deserializedUserInfo.courses.push({
       course_id: newCourse.courseNumber,
@@ -76,14 +85,6 @@ const helpers = {
   },
   getCourses: function (data) {
     return getCourses(data.courses);
-  },
-  serializeScheduleData: function (newSchedule) {
-    newSchedule.starts_at = this.convertDateToString(newSchedule.starts_at);
-    newSchedule.ends_at = this.convertDateToString(newSchedule.ends_at);
-    newSchedule.max_study_hours = parseInt(newSchedule.max_study_hours);
-    console.log("newSchedule", newSchedule);
-
-    return newSchedule;
   },
   convertDateToString: function (date) {
     return _convertDateToString(date);
