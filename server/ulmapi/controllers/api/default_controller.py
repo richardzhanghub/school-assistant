@@ -127,6 +127,21 @@ def schedule_post(schedule_info=None):  # noqa: E501
     return 'do some magic!'
 
 
+def schedule_put(schedule_info=None):  # noqa: E501
+    """Update the current schedule
+
+     # noqa: E501
+
+    :param schedule_info: 
+    :type schedule_info: dict | bytes
+
+    :rtype: ScheduleInfo
+    """
+    if connexion.request.is_json:
+        schedule_info = ScheduleInfo.from_dict(connexion.request.get_json())  # noqa: E501
+    return 'do some magic!'
+
+
 def signup_post(signup_info=None):  # noqa: E501
     """Creates a new user (signup)
 

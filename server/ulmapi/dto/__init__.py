@@ -11,4 +11,3 @@ from ulmapi.dto.signup_info import SignupInfo
 from ulmapi.dto.time_spent_info import TimeSpentInfo
 from ulmapi.dto.user_credentials import UserCredentials
 from ulmapi.dto.user_info import UserInfo
-from ulmapi.dto.user_info_current_schedule import UserInfoCurrentSchedule

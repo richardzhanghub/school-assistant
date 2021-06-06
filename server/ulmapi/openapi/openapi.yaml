@@ -193,6 +193,24 @@ paths:
           description: Credentials are missing or invalid
       summary: Request generation of a new schedule
       x-openapi-router-controller: ulmapi.controllers.impl.default_controller
+    put:
+      operationId: schedule_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleInfo'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleInfo'
+          description: Created
+        "401":
+          description: Credentials are missing or invalid
+      summary: Update the current schedule
+      x-openapi-router-controller: ulmapi.controllers.impl.default_controller
   /signup:
     post:
       operationId: signup_post
@@ -270,33 +288,40 @@ components:
         course_id:
           minLength: 1
           pattern: '[a-z0-9]+'
+          title: course_id
           type: string
         course_name:
           minLength: 1
+          title: course_name
           type: string
         expected_difficulty:
           format: int32
           maximum: 5
           minimum: 1
+          title: expected_difficulty
           type: integer
         desired_grade:
           format: int32
           maximum: 100
           minimum: 0
+          title: desired_grade
           type: integer
         deliverables:
           additionalProperties:
             $ref: '#/components/schemas/DeliverableInfo'
+          title: deliverables
           type: object
         time_spent:
           items:
             $ref: '#/components/schemas/TimeSpentInfo'
+          title: time_spent
           type: array
       required:
       - course_id
       - course_name
       - desired_grade
       - expected_difficulty
+      title: CourseInfo
       type: object
     DeliverableInfo:
       example:
@@ -310,28 +335,35 @@ components:
         deliverable_id:
           minLength: 1
           pattern: '[a-z0-9]+'
+          title: deliverable_id
           type: string
         deliverable_name:
           minLength: 1
+          title: deliverable_name
           type: string
         grade:
           maximum: 100
           minimum: 0
+          title: grade
           type: number
         weight:
           maximum: 100
           minimum: 0
+          title: weight
           type: number
         due_at:
           format: date-time
+          title: due_at
           type: string
         completed:
+          title: completed
           type: boolean
       required:
       - completed
       - deliverable_name
       - due_at
       - weight
+      title: DeliverableInfo
       type: object
     TimeSpentInfo:
       example:
@@ -341,17 +373,21 @@ components:
       properties:
         notes:
           minLength: 1
+          title: notes
           type: string
         started_at:
           format: date-time
+          title: started_at
           type: string
         ended_at:
           format: date-time
+          title: ended_at
           type: string
       required:
       - ended_at
       - notes
       - started_at
+      title: TimeSpentInfo
       type: object
     UserInfo:
       example:
@@ -378,37 +414,58 @@ components:
               started_at: 2000-01-23T04:56:07.000+00:00
               ended_at: 2000-01-23T04:56:07.000+00:00
         time_recorded:
-          key: 6.027456183070403
+          key: 0.8008281904610115
         current_schedule:
-          starts_at: 2000-01-23
-          time_allocations:
-            key: 0.8008281904610115
-          ends_at: 2000-01-23
+          expected_difficulty: 1
+          course_id: course_id
+          course_name: course_name
+          deliverables:
+            key:
+              deliverable_id: deliverable_id
+              grade: 14.658129805029452
+              weight: 59.621339166831824
+              due_at: 2000-01-23T04:56:07.000+00:00
+              completed: true
+              deliverable_name: deliverable_name
+          desired_grade: 60
+          time_spent:
+          - notes: notes
+            started_at: 2000-01-23T04:56:07.000+00:00
+            ended_at: 2000-01-23T04:56:07.000+00:00
+          - notes: notes
+            started_at: 2000-01-23T04:56:07.000+00:00
+            ended_at: 2000-01-23T04:56:07.000+00:00
         email: email
         username: username
       properties:
         current_schedule:
-          $ref: '#/components/schemas/UserInfo_current_schedule'
+          $ref: '#/components/schemas/CourseInfo'
         time_recorded:
           additionalProperties:
             type: number
+          title: time_recorded
           type: object
         username:
           minLength: 1
+          title: username
           type: string
         email:
           minLength: 1
+          title: email
           type: string
         joined_at:
           format: date-time
+          title: joined_at
           type: string
         courses:
           additionalProperties:
             $ref: '#/components/schemas/CourseInfo'
+          title: courses
           type: object
       required:
       - email
       - username
+      title: UserInfo
       type: object
     UserCredentials:
       example:
@@ -428,9 +485,11 @@ components:
         access_token: access_token
       properties:
         access_token:
+          title: access_token
           type: string
       required:
       - access_token
+      title: AccessToken
       type: object
     SignupInfo:
       example:
@@ -462,40 +521,27 @@ components:
       properties:
         starts_at:
           format: date
+          title: starts_at
           type: string
         ends_at:
           format: date
+          title: ends_at
           type: string
         max_study_hours:
           format: int32
           minimum: 1
+          title: max_study_hours
           type: integer
         time_allocations:
           additionalProperties:
             type: number
+          title: time_allocations
           type: object
       required:
       - ends_at
       - max_study_hours
       - starts_at
-      type: object
-    UserInfo_current_schedule:
-      example:
-        starts_at: 2000-01-23
-        time_allocations:
-          key: 0.8008281904610115
-        ends_at: 2000-01-23
-      properties:
-        starts_at:
-          format: date
-          type: string
-        ends_at:
-          format: date
-          type: string
-        time_allocations:
-          additionalProperties:
-            type: number
-          type: object
+      title: ScheduleInfo
       type: object
   securitySchemes:
     bearerAuth:

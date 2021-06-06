@@ -104,6 +104,22 @@ paths:
                 $ref: '#/components/schemas/ScheduleInfo'
         '401':
           $ref: '#/components/responses/AuthorizationError'
+    put:
+      summary: Update the current schedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleInfo'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleInfo'
+        '401':
+          $ref: '#/components/responses/AuthorizationError'
   /course:
     post:
       summary: Create a new course for the user
@@ -319,18 +335,7 @@ components:
       type: object
       properties:
         current_schedule:
-          type: object
-          properties:
-            starts_at:
-              format: date
-              type: string
-            ends_at:
-              format: date
-              type: string
-            time_allocations:
-              additionalProperties:
-                type: number
-              type: object
+          $ref: '#/components/schemas/CourseInfo'
         time_recorded:
           additionalProperties:
             type: number

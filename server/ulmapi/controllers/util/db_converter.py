@@ -2,18 +2,20 @@ from ulmapi.db import models
 from ulmapi.dto.course_info import CourseInfo
 from ulmapi.dto.deliverable_info import DeliverableInfo
 from ulmapi.dto.time_spent_info import TimeSpentInfo
+from ulmapi.dto.schedule_info import ScheduleInfo
 from ulmapi.dto.user_info import UserInfo
-from ulmapi.dto.user_info_current_schedule import UserInfoCurrentSchedule
-import datetime
 
 
-def schedule_info_to_db(schedule_info):
+def schedule_info_to_db(schedule_info, user_db):
     time_allocations = {}
+    for course_id in user_db.courses:
+        time_allocations[course_id] = 0
     if schedule_info.time_allocations is not None:
         for course_id, hours in schedule_info.time_allocations.items():
             time_allocations[course_id] = hours
     return models.Schedule(starts_at=schedule_info.starts_at,
                            ends_at=schedule_info.ends_at,
+                           max_study_hours=schedule_info.max_study_hours,
                            time_allocations=time_allocations)
 
 
@@ -56,7 +58,10 @@ def current_schedule_from_user(user):
     time_allocations = {}
     for (course_id, time_allocation_db) in user.current_schedule.time_allocations.items():
         time_allocations[course_id] = time_allocation_db
-    return UserInfoCurrentSchedule(starts_at=user.current_schedule.starts_at, ends_at=user.current_schedule.ends_at, time_allocations=time_allocations)
+    return ScheduleInfo(starts_at=user.current_schedule.starts_at,
+                        ends_at=user.current_schedule.ends_at,
+                        max_study_hours=user.current_schedule.max_study_hours,
+                        time_allocations=time_allocations)
 
 def time_recorded_from_courses(courses, current_schedule):
     current_schedule_start = current_schedule.starts_at
@@ -80,10 +85,13 @@ def course_info_from_db(course_db):
                       deliverables=deliverables, time_spent=time_spent)
 
 
-def user_info_from_db(user):
-    current_schedule = current_schedule_from_user(user)
+def user_info_from_db(user): 
     courses = courses_from_user(user)
-    time_recorded = time_recorded_from_courses(courses, current_schedule)
+    current_schedule = None
+    time_recorded = None
+    if user.current_schedule is not None:
+        current_schedule = current_schedule_from_user(user)
+        time_recorded = time_recorded_from_courses(courses, current_schedule)
     return UserInfo(current_schedule=current_schedule, time_recorded=time_recorded, username=user.username, email=user.email, joined_at=user.joined_at, courses=courses)
 
 

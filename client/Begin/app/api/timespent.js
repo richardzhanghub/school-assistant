@@ -26,7 +26,7 @@ const addTimeSpent = (course_id, newTimeSpent) => {
     started_at: util.convertDateToString(newTimeSpent.started_at),
   };
 
-  client.post(endpoint, data);
+  return client.post(endpoint, data);
 };
 
 const getTimeSpent = (courseId) => {

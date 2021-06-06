@@ -35,7 +35,7 @@ const addDeliverable = (course_id, newDeliverable) => {
     weight: newDeliverable.weight,
   };
 
-  client.post(endpoint, data);
+  return client.post(endpoint, data);
 };
 
 const editDeliverable = (course_id, changedDeliverable) => {

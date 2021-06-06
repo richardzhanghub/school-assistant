@@ -86,6 +86,14 @@ const helpers = {
   getCourses: function (data) {
     return getCourses(data.courses);
   },
+  serializeScheduleData: function (newSchedule) {
+    newSchedule.starts_at = this.convertDateToString(newSchedule.starts_at);
+    newSchedule.ends_at = this.convertDateToString(newSchedule.ends_at);
+    newSchedule.max_study_hours = parseInt(newSchedule.max_study_hours);
+    console.log("newSchedule", newSchedule);
+
+    return newSchedule;
+  },
   convertDateToString: function (date) {
     return _convertDateToString(date);
   },

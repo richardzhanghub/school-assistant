@@ -14,9 +14,12 @@ function ListingEditCourse({ navigation, course }) {
         difficulty: editedcourse.difficulty,
         grade: editedcourse.grade,
       };
-      const response = coursesApi.editCourse(editCourse);
-      navigation.navigate(routes.LISTINGS)
-      ;
+      const call = coursesApi.editCourse(editCourse);
+      call.then((response) => {
+        if (response.ok) {
+          navigation.navigate(routes.LISTINGS, {updated: editCourse})
+        }
+      });
     }
 
     return (

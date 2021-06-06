@@ -14,7 +14,6 @@ ulmapi/dto/signup_info.py
 ulmapi/dto/time_spent_info.py
 ulmapi/dto/user_credentials.py
 ulmapi/dto/user_info.py
-ulmapi/dto/user_info_current_schedule.py
 ulmapi/encoder.py
 ulmapi/openapi/openapi.yaml
 ulmapi/typing_utils.py

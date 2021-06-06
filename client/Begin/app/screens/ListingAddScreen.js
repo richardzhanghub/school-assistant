@@ -16,7 +16,7 @@ import {
 import Screen from "../components/Screen";
 import useLocation from "../hooks/useLocation";
 
-const ListingAddScreen = () => {
+const ListingAddScreen = ({navigation}) => {
   const [selectedType, setSelectedType] = useState('timeSpent');
 
   return (
@@ -41,7 +41,7 @@ const ListingAddScreen = () => {
           <Text style={styles.text}>Deliverable</Text>
         </TouchableOpacity>
       </View>
-      { selectedType && <ListAdd form={selectedType}/> }
+      { selectedType && <ListAdd form={selectedType} navigation={navigation}/> }
     </Screen>
   );
 }

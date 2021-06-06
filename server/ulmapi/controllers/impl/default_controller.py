@@ -19,6 +19,7 @@ from ulmapi.dto.deliverable_info import DeliverableInfo
 from ulmapi.dto.schedule_info import ScheduleInfo
 from ulmapi.dto.time_spent_info import TimeSpentInfo
 from ulmapi.schedule.generator import create_time_allocations
+from ulmapi.schedule.validator import is_valid_schedule_info
 
 
 LOG = logging.getLogger(__name__)
@@ -192,7 +193,32 @@ def schedule_post(user):  # noqa: E501
         return flask.Response(status=404)
 
     schedule_info.time_allocations = create_time_allocations(schedule_info, user_db)
-    schedule_db = schedule_info_to_db(schedule_info)
+    schedule_db = schedule_info_to_db(schedule_info, user_db)
+    user_db.current_schedule = schedule_db
+    user_db.save()
+    return schedule_info
+
+
+def schedule_put(user):  # noqa: E501
+    """Update the current schedule
+
+     # noqa: E501
+
+    :param schedule_info:
+    :type schedule_info: dict | bytes
+
+    :rtype: ScheduleInfo
+    """
+    schedule_info = ScheduleInfo.from_dict(connexion.request.get_json())
+    try:
+        user_db = models.User.objects.get(username=user)
+    except DoesNotExist:
+        return flask.Response(status=404)
+
+    if not is_valid_schedule_info(schedule_info):
+        return ('Invalid schedule', 400)
+
+    schedule_db = schedule_info_to_db(schedule_info, user_db)
     user_db.current_schedule = schedule_db
     user_db.save()
     return schedule_info

@@ -60,12 +60,10 @@ def create_time_allocations(schedule_info, user_db):
             total_weight += item_weights[0][i]
 
     time_allocations = {}
-    print(len(packed_items))
+    for course_id in user_db.courses:
+        time_allocations[course_id] = 0
     for idx in range(len(packed_items)):
         i = packed_items[idx]
         course_id = item_courses[i]
-        if course_id not in time_allocations:
-            time_allocations[course_id] = num_hours_per_unit_cost
-        else:
-            time_allocations[course_id] += num_hours_per_unit_cost
+        time_allocations[course_id] += num_hours_per_unit_cost
     return time_allocations

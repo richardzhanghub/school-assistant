@@ -21,7 +21,7 @@ function ListEditDeliverable({ navigation, deliverable, courseId }) {
     ];
 
     function deliverableEdit(changedDeliverable, { resetForm }) {
-      const newDeliverable = {
+      const editDeliverable = {
         completed: completed,
         deliverable_id: deliverable.deliverable_id,
         deliverable_name: changedDeliverable.deliverableName,
@@ -29,8 +29,12 @@ function ListEditDeliverable({ navigation, deliverable, courseId }) {
         grade: changedDeliverable.grade ? parseInt(changedDeliverable.grade) : changedDeliverable.grade,
         weight: parseInt(changedDeliverable.weight),
       };
-      const response = deliverableApi.editDeliverable(courseId, newDeliverable);
-      navigation.navigate(routes.LISTINGS)
+      const call = deliverableApi.editDeliverable(courseId, editDeliverable);
+      call.then((response) => {
+        if (response.ok) {
+          navigation.navigate(routes.LISTINGS, {updated: editDeliverable})
+        }
+      });
     }
 
     return (

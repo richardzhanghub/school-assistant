@@ -1,13 +1,35 @@
+import { View } from "native-base";
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet } from "react-native";
+import GoalChart from "../components/charts/GoalChart";
 import Screen from "../components/Screen";
-
-export default function ProgressDetailScreen() {
+import AppText from "../components/Text";
+export default function ProgressDetailScreen(schedule_status) {
+  const displayTitle = () => {
+    if (schedule_status === "new") {
+      return <AppText>New Schedule</AppText>;
+    } else {
+      return <AppText>Current Progress</AppText>;
+    }
+  };
   return (
     <Screen>
-      <Text>Progress Details</Text>
+      {/* {() => displayTitle()} */}
+      {/* <Text>Progress Details {schedule_status}</Text> */}
+      <View style={styles.title}>
+        <AppText>Current Progress</AppText>
+      </View>
+
+      <GoalChart />
     </Screen>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  title: {
+    flex: 1,
+    marginTop: 15,
+    // justifyContent: "center",
+    alignItems: "center",
+  },
+});

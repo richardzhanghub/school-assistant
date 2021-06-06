@@ -35,6 +35,8 @@ class Course(mongo_db.EmbeddedDocument):
 class Schedule(mongo_db.EmbeddedDocument):
     starts_at = mongo_db.DateTimeField(required=True)
     ends_at = mongo_db.DateTimeField(required=True)
+    max_study_hours = mongo_db.IntField(required=True,
+                                        min_value=0)
     time_allocations = mongo_db.MapField(field=mongo_db.FloatField(min_value=0))
 
 

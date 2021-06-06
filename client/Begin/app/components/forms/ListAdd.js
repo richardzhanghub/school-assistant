@@ -9,6 +9,7 @@ import timespentApi from "../../api/timespent";
 import colors from "../../config/colors";
 import CategoryPickerItem from "../CategoryPickerItem";
 import { Form, FormField, FormPicker as Picker, SubmitButton } from ".";
+import routes from "../../navigation/routes"
 
 const courseValidationSchema = Yup.object().shape({
   courseName: Yup.string().required().min(1).label("Course name"),
@@ -49,7 +50,7 @@ const departments = [
   },
 ];
 
-function ListingAdd({ form }) {
+function ListAdd({ form, navigation }) {
   const [startTime, setStartTime] = useState(new Date(1598051730000));
   const [endTime, setEndTime] = useState(new Date());
 
@@ -66,11 +67,15 @@ function ListingAdd({ form }) {
         notes: timeSpent.note,
         started_at: startTime,
       };
-      const response = timespentApi.addTimeSpent(
+      const call = timespentApi.addTimeSpent(
         timeSpent.courseNumber,
         newTimeSpent
       );
-      resetForm();
+      call.then((response) => {
+        if (response.ok) {
+          navigation.navigate(routes.LISTINGS, {updated: newTimeSpent})
+        }
+      });
     }
 
     return (
@@ -140,8 +145,12 @@ function ListingAdd({ form }) {
         difficulty: course.difficulty,
         grade: course.grade,
       };
-      const response = coursesApi.addCourse(newCourse);
-      resetForm();
+      const call = coursesApi.addCourse(newCourse);
+      call.then((response) => {
+        if (response.ok) {
+          navigation.navigate(routes.LISTINGS, {updated: newCourse})
+        }
+      });
     }
 
     return (
@@ -213,8 +222,12 @@ function ListingAdd({ form }) {
         grade: deliverable.grade ? parseInt(deliverable.grade) : deliverable.grade,
         weight: parseInt(deliverable.weight),
       };
-      const response = deliverableApi.addDeliverable(deliverable.courseName, newDeliverable);
-      resetForm();
+      const call = deliverableApi.addDeliverable(deliverable.courseName, newDeliverable);
+      call.then((response) => {
+        if (response.ok) {
+          navigation.navigate(routes.LISTINGS, {updated: deliverable.courseName})
+        }
+      });
     }
 
     return (
@@ -301,4 +314,4 @@ function ListingAdd({ form }) {
     : timeSpentForm();
 }
 
-export default ListingAdd;
+export default ListAdd;
