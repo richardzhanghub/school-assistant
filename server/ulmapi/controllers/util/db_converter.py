@@ -80,10 +80,13 @@ def course_info_from_db(course_db):
                       deliverables=deliverables, time_spent=time_spent)
 
 
-def user_info_from_db(user):
-    current_schedule = current_schedule_from_user(user)
+def user_info_from_db(user): 
     courses = courses_from_user(user)
-    time_recorded = time_recorded_from_courses(courses, current_schedule)
+    current_schedule = None
+    time_recorded = None
+    if user.current_schedule is not None:
+        current_schedule = current_schedule_from_user(user)
+        time_recorded = time_recorded_from_courses(courses, current_schedule)
     return UserInfo(current_schedule=current_schedule, time_recorded=time_recorded, username=user.username, email=user.email, joined_at=user.joined_at, courses=courses)
 
 

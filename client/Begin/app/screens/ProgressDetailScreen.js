@@ -1,9 +1,9 @@
 import { View } from "native-base";
 import React from "react";
 import { StyleSheet } from "react-native";
+import GoalChart from "../components/charts/GoalChart";
 import Screen from "../components/Screen";
 import AppText from "../components/Text";
-
 export default function ProgressDetailScreen(schedule_status) {
   const displayTitle = () => {
     if (schedule_status === "new") {
@@ -19,6 +19,8 @@ export default function ProgressDetailScreen(schedule_status) {
       <View style={styles.title}>
         <AppText>Current Progress</AppText>
       </View>
+
+      <GoalChart />
     </Screen>
   );
 }
