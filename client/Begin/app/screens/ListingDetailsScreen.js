@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { StyleSheet, View, SafeAreaView, TouchableOpacity } from "react-native";
+import React from "react";
+import { SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
 import CourseDetails from "../components/CourseDetails";
 import ListItem from "../components/lists/ListItem";
 import Screen from "../components/Screen";
@@ -10,21 +10,29 @@ import routes from "../navigation/routes";
 
 function ListingDetailsScreen({ navigation, route }) {
   const listing = route.params;
-  
   return (
     <Screen style={styles.screen}>
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Text style={styles.title}>{listing.course_id}</Text>
         <Text style={styles.subTitle}>{listing.course_name}</Text>
-        <View style={{flexDirection: "row"}}>
+        <View style={{ flexDirection: "row" }}>
           <View>
-            <Text style={{color: colors.primary}}>Expected Difficulty Level: {listing.expected_difficulty}</Text>
-            <Text style={{color: colors.primary}}>Desired Grade: {listing.desired_grade}%</Text>
+            <Text style={{ color: colors.primary }}>
+              Expected Difficulty Level: {listing.expected_difficulty}
+            </Text>
+            <Text style={{ color: colors.primary }}>
+              Desired Grade: {listing.desired_grade}%
+            </Text>
           </View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate(routes.LISTING_EDIT, {type: "course", val: listing})}
-          > 
+            onPress={() =>
+              navigation.navigate(routes.LISTING_EDIT, {
+                type: "course",
+                val: listing,
+              })
+            }
+          >
             <Text style={styles.buttonText}>Edit</Text>
           </TouchableOpacity>
         </View>
@@ -66,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 15,
     marginLeft: 50,
-    width:"22%"
+    width: "22%",
   },
   buttonText: {
     color: colors.white,

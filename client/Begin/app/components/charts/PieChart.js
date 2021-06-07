@@ -26,7 +26,7 @@ import { PieChart as NativePieChart } from "react-native-chart-kit";
         - ## Example:
         <PieChart courses={[
         {
-          course_id: "ece123",
+          course_id: "ECE 123",
           time_spent: [{
             ended_at: "2021-03-16T05:31:57.775Z",
             notes: "Notes 123",
@@ -34,7 +34,7 @@ import { PieChart as NativePieChart } from "react-native-chart-kit";
           }]
         },
         {
-          course_id: "ece255",
+          course_id: "ECE 240",
           time_spent: [{
             ended_at: "2021-03-16T05:31:57.775Z",
             notes: "Notes 123",
@@ -47,7 +47,7 @@ import { PieChart as NativePieChart } from "react-native-chart-kit";
           }]
         },
         {
-          course_id: "ece250",
+          course_id: "ECE 250",
           time_spent: [{
             ended_at: "2021-03-16T05:31:57.775Z",
             notes: "Notes 123",
@@ -64,6 +64,7 @@ import { PieChart as NativePieChart } from "react-native-chart-kit";
 export default class PieChart extends React.Component {
     constructor(props) {
         super(props)
+        if (!props.hasOwnProperty('courses')) {throw 'Required property missing: "courses"'}
         const colorPalette = ["#264653", "#2a9d8f", "#e9c46a", "#f4a261", "#e76f51", "#606c38", "#283618", "#118ab2"]
         data = []
         props.courses.forEach((element, i) => {

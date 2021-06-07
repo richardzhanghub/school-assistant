@@ -95,7 +95,22 @@ const helpers = {
     return newSchedule;
   },
   convertDateToString: function (date) {
+    console.log("** Date is", _convertDateToString(date));
     return _convertDateToString(date);
+  },
+  getScheduleForProgressVisual: function (getUserResp) {
+    var current_schedule = getUserResp.current_schedule;
+    return current_schedule;
+  },
+  getDataForProgressVisual: function (getUserResp) {
+    const courses = getUserResp.courses;
+
+    const res = [];
+    for (const p in courses) {
+      const _o = courses[p];
+      res.push(_o);
+    }
+    return res;
   },
 };
 
@@ -124,8 +139,6 @@ const convertArrayOfObjToObj = (arr, key) => {
   for (var i = 0; i < arr.length; ++i) {
     const element = arr[i];
     const objKey = element[key];
-    // const key = element.course_id;
-    // console.log("objKey is: ", objKey);
     obj[objKey] = element;
   }
   return obj;

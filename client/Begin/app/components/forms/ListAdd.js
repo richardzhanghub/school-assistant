@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 import RadioForm from "react-native-simple-radio-button";
 import * as Yup from "yup";
+import { Form, FormField, FormPicker as Picker, SubmitButton } from ".";
 import coursesApi from "../../api/courses";
 import deliverableApi from "../../api/deliverable";
 import timespentApi from "../../api/timespent";
 import colors from "../../config/colors";
+import routes from "../../navigation/routes";
 import CategoryPickerItem from "../CategoryPickerItem";
-import { Form, FormField, FormPicker as Picker, SubmitButton } from ".";
-import routes from "../../navigation/routes"
 
 const courseValidationSchema = Yup.object().shape({
   courseName: Yup.string().required().min(1).label("Course name"),
@@ -51,7 +51,7 @@ const departments = [
 ];
 
 function ListAdd({ form, navigation }) {
-  const [startTime, setStartTime] = useState(new Date(1598051730000));
+  const [startTime, setStartTime] = useState(new Date());
   const [endTime, setEndTime] = useState(new Date());
 
   const [completed, setCompleted] = useState(false);
@@ -73,7 +73,7 @@ function ListAdd({ form, navigation }) {
       );
       call.then((response) => {
         if (response.ok) {
-          navigation.navigate(routes.LISTINGS, {updated: newTimeSpent})
+          navigation.navigate(routes.LISTINGS, { updated: newTimeSpent });
         }
       });
     }
@@ -148,7 +148,7 @@ function ListAdd({ form, navigation }) {
       const call = coursesApi.addCourse(newCourse);
       call.then((response) => {
         if (response.ok) {
-          navigation.navigate(routes.LISTINGS, {updated: newCourse})
+          navigation.navigate(routes.LISTINGS, { updated: newCourse });
         }
       });
     }
@@ -219,13 +219,20 @@ function ListAdd({ form, navigation }) {
         completed: completed,
         deliverable_name: deliverable.deliverableName,
         due_at: deliverableDueAt,
-        grade: deliverable.grade ? parseInt(deliverable.grade) : deliverable.grade,
+        grade: deliverable.grade
+          ? parseInt(deliverable.grade)
+          : deliverable.grade,
         weight: parseInt(deliverable.weight),
       };
-      const call = deliverableApi.addDeliverable(deliverable.courseName, newDeliverable);
+      const call = deliverableApi.addDeliverable(
+        deliverable.courseName,
+        newDeliverable
+      );
       call.then((response) => {
         if (response.ok) {
-          navigation.navigate(routes.LISTINGS, {updated: deliverable.courseName})
+          navigation.navigate(routes.LISTINGS, {
+            updated: deliverable.courseName,
+          });
         }
       });
     }

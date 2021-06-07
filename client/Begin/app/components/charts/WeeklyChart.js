@@ -4,58 +4,94 @@ import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
 import { LineChart } from "react-native-chart-kit";
 
-/* NOTES: 
-    WeeklyChart could show multiple courses juxtaposed in the same graph, or sum the hours for all courses into the same graph
-    I wasn't sure which is more useful, so for now input is simply an array of time_spent objects
-*/
-
-
 /*
-    Displays a week of hours studied, always starting from Monday
+    Displays a week of hours studied per course, starting from Monday, with an optional startRange and endRange for future use -> multiple week scroll
     @ props:
-        -   timeSpent: 
-                Array[
+        - courses:
+            Array[
+                course:
                     Object{
-                        ended_at: Date,
-                        notes: string,
-                        started_at: Date
+                        course_id: string,
+                        time_spent: Array[
+                            Object{
+                                ended_at: Date,
+                                notes: string,
+                                started_at: Date
+                            }
+                        ]
                     }
-                ]
+            ]}
+        - startRange: Date (optional)
+        - endRange: Date (optional)
         - ## Example:
-            <WeeklyChart timeSpent={[
-            {
-                ended_at: "2021-03-16T05:31:57.775Z",
-                notes: "Notes 123",
-                started_at: "2021-03-16T03:31:20.176Z"
-            },
-            {
-                ended_at: "2021-03-17T04:31:57.775Z",
-                notes: "Notes 123",
-                started_at: "2021-03-17T03:31:20.176Z"
-            },
-            {
-                ended_at: "2021-03-19T06:31:57.775Z",
-                notes: "Notes 123",
-                started_at: "2021-03-19T03:31:20.176Z"
-            },
-            {
-                ended_at: "2021-03-20T08:31:57.775Z",
-                notes: "Notes 123",
-                started_at: "2021-03-20T03:31:20.176Z"
-            }
-        ]}/>
-    */
+        <WeeklyChart courses={[
+        {
+          course_id: "ECE 123",
+          time_spent: [{
+            ended_at: "2021-03-16T05:31:57.775Z",
+            notes: "Notes 123",
+            started_at: "2021-03-16T03:31:20.176Z"
+          }]
+        },
+        {
+          course_id: "ECE 240",
+          time_spent: [{
+            ended_at: "2021-03-16T05:31:57.775Z",
+            notes: "Notes 123",
+            started_at: "2021-03-16T03:31:20.176Z"
+          },
+          {
+            ended_at: "2021-03-17T04:31:57.775Z",
+            notes: "Notes 123",
+            started_at: "2021-03-17T03:31:20.176Z"
+          }]
+        },
+        {
+          course_id: "ECE 250",
+          time_spent: [{
+            ended_at: "2021-03-16T05:31:57.775Z",
+            notes: "Notes 123",
+            started_at: "2021-03-16T03:31:20.176Z"
+          },
+          {
+            ended_at: "2021-03-17T04:31:57.775Z",
+            notes: "Notes 123",
+            started_at: "2021-03-17T03:31:20.176Z"
+          }]
+        }
+      ]} />
+*/
 export default class WeeklyChart extends React.Component {
     constructor(props) {
         super(props)
-        const timeSpent = props.timeSpent
-        data = [this.sumHours(timeSpent, 0), this.sumHours(timeSpent, 1), this.sumHours(timeSpent, 2),
-        this.sumHours(timeSpent, 3), this.sumHours(timeSpent, 4), this.sumHours(timeSpent, 5), this.sumHours(timeSpent, 6)]
-        max = this.findMax(data)
+        if (!props.hasOwnProperty('courses')) { throw 'Required property missing: "courses"' }
+        const colorPalette = ["#264653", "#2a9d8f", "#e9c46a", "#f4a261", "#e76f51", "#606c38", "#283618", "#118ab2"]
+        const courses = props.courses
+        // Show at most 3 courses for now to avoid cluttering
+        max = 0
+        datasets = []
+        courses.forEach((course, i) => {
+            console.log(course)
+            if (i < 3) {
+                data = [this.sumHours(course.time_spent, 0), this.sumHours(course.time_spent, 1), this.sumHours(course.time_spent, 2),
+                this.sumHours(course.time_spent, 3), this.sumHours(course.time_spent, 4), this.sumHours(course.time_spent, 5), this.sumHours(course.time_spent, 6)]
+                console.log(data)
+                switch (i) {
+                    case 1:
+                        datasets.push({ data: data, color: (opacity = 1) => `rgba(244, 162, 97, ${opacity})` })
+                    case 2:
+                        datasets.push({ data: data, color: (opacity = 1) => `rgba(38, 70, 83, ${opacity})` })
+                        case 3:
+                        datasets.push({ data: data, color: (opacity = 1) => `rgba(42, 157, 143, ${opacity})` })
+                }
+                max = this.findMax(data)
+            }
+        })
         this.state = {
-            data: { labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], datasets: [{ data: data }] },
+            data: { labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], datasets: datasets },
             max: max
         }
+        console.log(this.state)
     }
 
     // day: number {0, 1, 2, 3, 4, 5, 6} for {mon, tue, wed, thu, fri, sat, sun}
@@ -83,7 +119,7 @@ export default class WeeklyChart extends React.Component {
 
     render() {
         return <View style={styles.container}>
-            <Text>Weekly Study Time</Text>
+            <Text style={{ color: '#000000' }}>Weekly Study Time</Text>
             <LineChart
                 data={this.state.data}
                 width={Dimensions.get("window").width} // from react-native
@@ -97,7 +133,7 @@ export default class WeeklyChart extends React.Component {
                     backgroundGradientFrom: "#FFFFFF",
                     backgroundGradientTo: "#FFFFFF",
                     decimalPlaces: 0, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                    color: (opacity = 1) => `rgba(244, 162, 97, ${opacity})`,
                     labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                     style: {
                         borderRadius: 16

@@ -34,27 +34,6 @@ function ListingsScreen({ navigation, route }) {
     console.log("clean data", cleanData);
   };
 
-  // const addCourse = () => {
-  //   const newCourse = {
-  //     courseName: "barry",
-  //     courseNumber: "ECE123",
-  //     difficulty: "1",
-  //     grade: "12",
-  //   };
-
-  //   coursesApi.addCourse(newCourse);
-  // };
-
-  // const addTimeSpent = () => {
-  //   const newTimeSpent = {
-  //     ended_at: new Date(),
-  //     notes: "New Notes 2123",
-  //     started_at: new Date(),
-  //   };
-
-  //   timespentApi.addTimeSpent("ECE406", newTimeSpent);
-  // };
-
   const addDeliverable = () => {
     const newDeliverable = {
       completed: true,
@@ -99,15 +78,19 @@ function ListingsScreen({ navigation, route }) {
           />
         )}
       />
-      <Button title="show data" onPress={() => addDeliverable()} />
+      <Button title="show data" onPress={helper} />
       <AppButton
         title="New Schedule"
-        onPress={() => navigation.navigate(routes.SCHEDULE_PARAM)}
+        onPress={() =>
+          navigation.navigate(routes.SCHEDULE_PARAM, getCoursesApi.data)
+        }
       />
 
       <AppButton
         title="View Progress"
-        onPress={() => navigation.navigate(routes.PROGRESS_DETAILS)}
+        onPress={() =>
+          navigation.navigate(routes.PROGRESS_DETAILS, getCoursesApi.data)
+        }
       />
     </Screen>
     // <Screen>
