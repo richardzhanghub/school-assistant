@@ -12,7 +12,7 @@ import defaultStyles from "../config/styles";
 import useApi from "../hooks/useApi";
 import routes from "../navigation/routes";
 export default function ScheduleParam({ navigation, route }) {
-  const userData = route.params;
+  // const userData = route.params;
 
   const getCoursesApi = useApi(coursesApi.getCourses);
   const [startPickerShow, setStartPickerShow] = useState(false);
@@ -39,7 +39,11 @@ export default function ScheduleParam({ navigation, route }) {
       console.log("NOT OK");
     } else {
       console.log("Success!!");
-      navigation.navigate(routes.PROGRESS_DETAILS, userData);
+      const userData = await coursesApi.getCourses();
+      if (!result.ok) {
+        console.log("NOT OK");
+      }
+      navigation.navigate(routes.PROGRESS_DETAILS, userData.data);
     }
   };
 
@@ -71,11 +75,6 @@ export default function ScheduleParam({ navigation, route }) {
     const currentDate = selectedDate || endDate;
     console.log(endDate);
     setEndDate(currentDate);
-  };
-
-  const onMaxHourChange = (maxHour) => {
-    console.log("maxHour +++", maxHour);
-    setMaxHour(maxHour);
   };
 
   return (

@@ -1,6 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import moment from "moment";
-import PropTypes from "prop-types";
 import React from "react";
 import {
   Animated,
@@ -167,8 +166,12 @@ export default class GoalChart extends React.Component {
   */
   constructor(props) {
     super(props);
-    if (!props.hasOwnProperty('courses')) {throw 'Required property missing: "courses"'}
-    if (!props.hasOwnProperty('schedule')) {throw 'Required property missing: "schedule"'}
+    if (!props.hasOwnProperty("courses")) {
+      throw 'Required property missing: "courses"';
+    }
+    if (!props.hasOwnProperty("schedule")) {
+      throw 'Required property missing: "schedule"';
+    }
     const startOfWeek = moment().startOf("isoweek");
     const deviceWidth = Dimensions.get("window").width;
     const maxWidth = deviceWidth * 0.7;
@@ -195,6 +198,18 @@ export default class GoalChart extends React.Component {
             this.props.endRange ? this.props.endRange : moment()
           );
       }
+
+      if (course.course_id === "ECE111") {
+        console.log("time_spent: ", course.time_spent);
+        console.log(
+          "SUM(time_spent): ",
+          this.sumHours(
+            course.time_spent,
+            this.props.startRange ? this.props.startRange : startOfWeek,
+            this.props.endRange ? this.props.endRange : moment()
+          )
+        );
+      }
     });
     for (const [courseId, val] of Object.entries(dataWeek)) {
       dataWeek[courseId].width = val.timeSpent
@@ -213,6 +228,13 @@ export default class GoalChart extends React.Component {
         const weekEnd = moment(startOfWeek).subtract(index - 1, "week");
         dataWeek = this.getGoals();
         props.courses.forEach((course) => {
+          // if (course.course_id === "ECE111") {
+          //   console.log(
+          //     "res: ",
+          //     this.sumHours(course.time_spent, weekStart, weekEnd)
+          //   );
+          // }
+
           if (labels.includes(course.course_id)) {
             dataWeek[course.course_id].timeSpent =
               dataWeek[course.course_id].timeSpent +
@@ -269,10 +291,20 @@ export default class GoalChart extends React.Component {
   sumHours(timeSpent, startRange, endRange) {
     sum = 0;
     timeSpent.forEach((element) => {
+      // console.log("element", element);
+
+      // console.log("endRange: "+ endRange +)
+      // console.log(
+      //   "isSameOrBefore, ",
+      //   moment(element.ended_at).isSameOrBefore(endRange, "day")
+      // );
       if (
         moment(element.started_at).isSameOrAfter(startRange, "day") &&
         moment(element.ended_at).isSameOrBefore(endRange, "day")
       ) {
+        console.log("time spent notes: ", element.notes);
+        // console.log("Gotyou started_at", moment(element.started_at));
+        // console.log("Gotyou ended_at", moment(element.ended_at));
         sum += moment(element.ended_at).diff(
           moment(element.started_at),
           "hours"
@@ -355,7 +387,7 @@ export default class GoalChart extends React.Component {
             style={[styles.button, { opacity: canPrev }]}
           >
             <MaterialCommunityIcons
-              name="power-off"
+              name="arrow-left"
               size={28}
               color="#6B7C96"
               style={styles.chevronLeft}
@@ -368,7 +400,7 @@ export default class GoalChart extends React.Component {
             style={[styles.button, { opacity: canNext }]}
           >
             <MaterialCommunityIcons
-              name="power-on"
+              name="arrow-right"
               size={28}
               color="#6B7C96"
               style={styles.chevronRight}

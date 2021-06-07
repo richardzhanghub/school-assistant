@@ -3,7 +3,6 @@ import client from "./client";
 const endpoint = "/user";
 const courseEndpoint = "/course";
 const getCourses = () => {
-  //   console.log("hey");
   return client.get(endpoint);
 };
 
@@ -14,13 +13,13 @@ const addCourse = (newCourse) => {
 };
 
 const editCourse = (changedCourse) => {
-  const data = helper.cleanEditCourseDate(changedCourse)
+  const data = helper.cleanEditCourseDate(changedCourse);
   const endpoint = `/course/${data.course_id}`;
-  return client.put(endpoint, data)
-}
+  return client.put(endpoint, data);
+};
 
 export default {
   getCourses,
   addCourse,
-  editCourse
+  editCourse,
 };

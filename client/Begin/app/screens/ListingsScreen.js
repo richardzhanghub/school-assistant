@@ -22,6 +22,7 @@ function ListingsScreen({ navigation, route }) {
   // }, []);
 
   useEffect(() => {
+    console.log("Hello ha");
     getCoursesApi.request();
   }, [route]);
 
