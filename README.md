@@ -4,3 +4,8 @@ School Assistant is a simple scheduling app that uses school schedule, personal 
 
 ## Preview
 
+![course](res/course.gif)
+![analytics](res/analytics.gif)
+![create deliverable](res/create_deliverable.gif)
+![edit schedule](res/edit_schedule.gif)
+![submit](res/submit.gif)
