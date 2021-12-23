@@ -1,22 +1,6 @@
-# prototype
+# School Assistant: ML-Powered Schedule App for Students
 
-## FE tools
+School Assistant is a simple scheduling app that uses school schedule, personal calendar, assignment grades, lab marks and test grades to generate a variety of dynamic study schedules to choose from.
 
-### npm i formik@2.1.4
+## Preview
 
-## package
-
-### Yup - form validation
-
-### Formik - form submission & handling
-
-### apisauce - API client - https://github.com/infinitered/apisauce
-
-    API call template:
-    const getCoursesApi = useApi(coursesApi.getCourses);
-
-    useEffect(() => {
-        getCoursesApi.request();
-    }, []);
-
-### color
