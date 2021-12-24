@@ -2,6 +2,20 @@
 
 School Assistant is a simple scheduling app that uses school schedule, personal calendar, assignment grades, lab marks and test grades to generate a variety of dynamic study schedules to choose from.
 
+## Tech Stack
+
+Back-end:
+- Flask
+- OpenAPI
+- Docker
+- OR-Tools
+
+Front-end:
+- React-Native
+- Yup
+- Formik
+- APISauce
+
 ## Preview
 
 ### Course Analytics
