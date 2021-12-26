@@ -48,3 +48,11 @@ All schedules can be tweaked or regenerated to reallocate time slots to account 
 
 
 ![edit schedule](res/edit_schedule.gif)
+
+
+### Database
+
+The back-end server requires a MongoDB Database to store user sessions, schedule and course information.
+
+
+![database](res/database.gif)
